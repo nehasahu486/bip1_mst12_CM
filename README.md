@@ -1,6 +1,6 @@
 ## Description
 
-This repository contains the analyses, scripts and files used for _M. oryzae_Bip1 project.
+This repository contains the analyses, scripts and files used for _M. oryzae_ Bip1 project.
 
 
 ## Table of Contents
