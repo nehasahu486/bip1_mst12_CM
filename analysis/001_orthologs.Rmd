@@ -1,0 +1,240 @@
+---
+title: "Conservation of Bip1 and Mst12 in other fungi"
+author: "Neha Sahu"
+date: "`r format(Sys.time(),'%d %B,%Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    highlight: pygments
+    code_folding: show
+  github_document:
+    toc: true
+    toc_depth: 3
+    fig_width: 12
+    fig_height: 8
+    dev: "png"
+    html_preview: false
+editor_options:             
+  chunk_output_type: inline
+---
+
+```{r setup,include=FALSE}
+library(here)
+source(here("scripts","analysis_config.R"))
+init_analysis("001_orthologs")
+
+knitr::opts_chunk$set(
+  fig.path="../data/results/001_orthologs/00_figures/",
+  fig.width=12,
+  fig.height=8
+)
+```
+
+# **Description**
+
+Camilla wants to check the orthologs for two Magnaporthe oryzae genes - MST12 (MGG_12958T0) and BIP1 (MGG_08118T0) - across 42 fungal species (Nef's dataset from Pmk1 phosphoproteomics paper - [https://www.cell.com/cell/fulltext/S0092-8674(24)00402-1](https://www.cell.com/cell/fulltext/S0092-8674(24)00402-1){.uri}).
+
+To do that, I performed the phylogenetic analysis and ortholog identification using OrthoFinder results,and visualize the presence and copy number of these genes in relation to fungal lifestyle and evolutionary relationships (information collected from the paper.
+
+**Goal:**
+
+To check the evolutionary conservation of MST12 and BIP1 orthologs across fungal species with diverse lifestyles,and to understand how their presence correlates with pathogenicity strategies and appressorium formation.
+
+**Workflow:**\
+- Identify the orthogroups containing MST12 and BIP1 from OrthoFinder analysis across 40+ fungal species. This list of species was used from Figure 3 in Neftaly Cruz Mireles,2023,Cell (<https://www.sciencedirect.com/science/article/pii/S0092867424004021?via%3Dihub>)
+
+\- Map the presence,absence,and copy number of these orthologs onto a species phylogeny generated from OrthoFinder (ran on HPC)
+
+\- Correlate ortholog distribution with fungal lifestyle (necrotroph,biotroph,saprophyte) and appressorium formation capabilities - Visualize the relationships using integrated phylogenetic trees and presence/absence plots
+
+\- Analyze whether the conservation pattern of these genes correlates with pathogenicity strategies and morphological specializations like appressorium formation
+
+# **Collect Fasta files and Run Orthofinder**
+
+-   Fasta files for proteomes used in this study were downloaded from the links provided in **Data S3. Dataset for evolutionary analysis**,related to Figure 3 in <https://www.sciencedirect.com/science/article/pii/S0092867424004021?via%3Dihub#mmc>. A lot of these links didn't work,so I downloaded them from their mentioned sources.
+
+-   I could not find the proteomes of 2 species from this list - One of them was species F. oxysporum-C.alt from a paper Berasategui et al.,Current Biology 2022 - this was shared by Dan MacLean.
+
+-   The second is the Candida albicans SC5314 v 22 .. the link in Suppl table S1 says it’s in the current directory,and the identifier is A22_s07-m01-r182. I couldn’t find this anywhere in the current folder at the database (<https://www.candidagenome.org/download/sequence/C_albicans_SC5314/Assembly22/current/> - showed the proteome file to be 404 not found),so I got this one from Dan as well.
+
+-   Renamed the fasta headers in proteome files for uniformity (See ***`/bin/clean_fasta_headers.html`*** ) and saved the proteomes with cleaner headers in a folder called ***`fasta_files`***.
+
+-   OrthoFinder was run on the HPC using the following bash script:
+
+``` bash
+#!/bin/bash
+
+ 
+#SBATCH -p tsl-medium
+#SBATCH --mem=10000
+#SBATCH --cpus-per-task=20
+#SBATCH --mail-type=begin,end,fail
+#SBATCH --mail-user=neha.sahu@tsl.ac.uk
+#SBATCH -o slurm.%j.out
+#SBATCH -e slurm.%j.err
+
+source package fc91613f-1095-4f67-b5aa-b86d702b36da #OrthoFinder - 2.5.4
+
+orthofinder -f fasta_files/ -t 20
+```
+
+The following files were used for further anlaysis from the OrthoFinder results folder:
+
+\- Species_Tree/SpeciesTree_rooted.txt
+
+\- Orthogroups/Orthogroups.GeneCount.tsv
+
+\- Orthogroups/Orthogroups.txt
+
+# **Checking conservation of Bip1 and Mst12**
+
+## Load Required Packages
+
+```{r load-packages,message =F,warning=F}
+library(tidyverse)
+library(reshape2)
+library(ggtree)
+library(phylotools)
+
+```
+
+## Load Species Tree
+
+```{r load-tree,fig.align='center',fig.height=10,fig.width=6}
+tree<-read.tree(here("data/raw/001_orthologs/","SpeciesTree_rooted.txt"))
+
+# Ladderize tree for better visualization
+LadderizeTree <- function(tree,temp_file="temp",orientation="left"){
+  if(file.exists(paste0("./",temp_file))){
+    stop("The chosen temporary file exists! Please choose an other temp_file name")
+  }
+  if(orientation=="left"){
+    right <- FALSE
+  }else{
+    right <- TRUE
+  }
+  tree_temp <- ladderize(tree,right=right)
+  write.tree(tree_temp,file=paste0("./",temp_file,".tre"))
+  tree_lad <- read.tree(paste0("./",temp_file,".tre"))
+  file.remove(paste0("./",temp_file,".tre"))
+  return(tree_lad)
+}
+
+tree<-LadderizeTree(tree)
+plot(tree) # This is the ladderized species tree
+```
+
+## Load Orthogroups GeneCount file
+
+```{r load-orthogroups gene count}
+og_count<-read_tsv(here("data/raw/001_orthologs/","Orthogroups.GeneCount.tsv")) %>%
+  melt() %>%
+  rename(
+         Species=variable,
+         Counts=value)
+head(og_count)
+```
+
+## Load Orthogroups.txt file
+
+This file will be used to check the Orthogroup ID (starting with OG00xxx) for any Magnaporthe protein (suffix MGG\_)
+
+```{r load-orthogroups}
+og_prot_id<-read_tsv(here("data/raw/001_orthologs/","Orthogroups.txt")) %>%
+  separate_rows(ProtID,sep=", ")
+
+favourite_mgg_id<- c("MGG_12958T0","MGG_08118T0") # these are mst12 and bip1 and T0 suffix is for the transcript
+
+og_id_of_fav_mgg_id<-og_prot_id %>%
+  filter(ProtID %in% favourite_mgg_id)
+og_id_of_fav_mgg_id
+```
+
+## Load Lifestyle file
+
+Lifestyle information for the list of species used was sourced from Data S3. Dataset for evolutionary analysis,related to Figure 3 in <https://www.sciencedirect.com/science/article/pii/S0092867424004021?via%3Dihub#mmc>
+
+```{r load-lifestyle}
+lf<-read_tsv(here("data/raw/001_orthologs/","Lifestyle.tsv"))
+```
+
+## File with results
+
+```{r load-results}
+og_plot<-og_count %>% 
+  right_join(og_id_of_fav_mgg_id,by="OG_ID") %>%
+  filter(OG_ID %in% og_id_of_fav_mgg_id$OG_ID & Species!="Total") %>%
+  left_join(lf,by="Species")
+unique(og_plot$OG_ID)
+head(og_plot) #This is the file with gene copy numbers pf mst12 and bip1 in different fungi
+```
+
+## Prepare files for plotting
+
+Species tree for final figure
+
+```{r load-nice_tree,fig.align='center',fig.height=10,fig.width=6,warning =F}
+og_tree<-ggtree(tree,color="grey69",layout="roundrect")+geom_tiplab(align=T,color="grey69",size=0.1)
+  #geom_tiplab(geom="text",color="grey69") # with species names
+og_tree$data$label
+```
+
+Order of species to be arranged in the final plots
+
+```{r load-species_order}
+order<-c("Schiz_pombe","Rhizo_irreg","Ustil_maydi","Crypt_neofo","Pirin_GeneC",
+         "PpacP_GeneC","Pucci_strii","Pucci_grami","Candi_albic","Sacch_cerev",
+         "Histo_capsu","Penic_oxali","Asper_nidul","Asper_fumig","Aspfl_GeneC",
+         "Zymos_triti","Stano_GeneC","Pyren_teres","Alter_brass","Alter_alter",
+         "Settu_GeneC","Coche_GeneM","Bipol_oryza","Bipol_sorok","Blume_grami",
+         "Botry_ciner","Scler_scler","MGG","Neuro_crass","Cytch_GeneC",
+         "Valsa_gca_0","Verti_dahli","Colle_higgi","Colle_fruct","Colle_gloeo",
+         "Ustil_viren","Clavi_purpu","Fusar_grami","Fusar_verti","Fusar_oxyso",
+         "Fusar_5176o","Fusar_oxysp")
+```
+
+```{r load-plot_bar,fig.align='center',fig.height=10,fig.width=10,warning =F,eval=F}
+counts_bar<- ggplot(og_plot)+
+    geom_bar(aes(y=factor(Species,order),x=Counts,fill=Lifestyle),stat="identity") +
+  facet_grid(~ ProtID,scales="free") +
+  labs(y="",x="Number of orthologs in Magnaporthe") +
+  theme_bw()+
+  theme(axis.text.x=element_text(angle=45,vjust=0.5,hjust=1,size=10),
+        strip.text=element_text(face="bold"),
+        strip.background=element_blank())+
+  scale_fill_brewer(palette="Pastel2",name=NULL)
+counts_bar
+```
+
+```{r load-plot_point,fig.align='center',fig.height=10,fig.width=10,warning =F}
+counts_points <- ggplot(og_plot) + 
+  geom_point(aes(y=factor(Species,order),x=ProtID,size=ifelse(Counts > 0,Counts,NA),
+                 fill=ifelse(Counts > 0,Lifestyle,Lifestyle)),
+             shape=21,color="black") + 
+  facet_grid(~ ProtID,scales="free") + 
+  geom_text(aes(y=factor(Species,order),
+                x=ProtID,
+                label=ifelse(Counts>0,Counts,NA),
+                color=ifelse(Counts>0,Lifestyle,Lifestyle)))+
+  labs(y="",x="") + 
+  theme_void() + 
+  theme(axis.text.y=element_text(),
+        strip.text=element_text(face="bold"),
+        strip.background=element_blank()) + 
+  scale_fill_brewer(palette="Pastel2",name=NULL) +
+  scale_color_brewer(palette="Dark2",name=NULL) +
+  scale_size_continuous(range=c(5,20))
+
+```
+
+# **Final Plot**
+
+```{r final_plot,fig.align='center',fig.height=10,fig.width=10,warning =F}
+og_tree+counts_points
+```
+
+```{r}
+sessionInfo()
+```

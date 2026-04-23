@@ -1,0 +1,29 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0006355	regulation of DNA-templated transcriptio...	428	54	29.6	0.00024
+GO:0106074	aminoacyl-tRNA metabolism involved in tr...	7	4	0.48	0.00067
+GO:0051258	protein polymerization	27	5	1.87	0.00125
+GO:1903833	positive regulation of cellular response...	4	3	0.28	0.00125
+GO:0120009	intermembrane lipid transfer	5	3	0.35	0.00296
+GO:0034198	cellular response to amino acid starvati...	6	5	0.41	0.00473
+GO:0007010	cytoskeleton organization	84	9	5.81	0.00475
+GO:0006096	glycolytic process	20	6	1.38	0.00476
+GO:0045901	positive regulation of translational elo...	2	2	0.14	0.00478
+GO:0045905	positive regulation of translational ter...	2	2	0.14	0.00478
+GO:0006048	UDP-N-acetylglucosamine biosynthetic pro...	6	3	0.41	0.00562
+GO:0006357	regulation of transcription by RNA polym...	282	33	19.5	0.00834
+GO:0045454	cell redox homeostasis	21	5	1.45	0.01251
+GO:0034765	regulation of monoatomic ion transmembra...	5	3	0.35	0.01363
+GO:0006432	phenylalanyl-tRNA aminoacylation	3	2	0.21	0.01367
+GO:0006094	gluconeogenesis	15	4	1.04	0.01413
+GO:0008612	peptidyl-lysine modification to peptidyl...	4	2	0.28	0.02609
+GO:0006097	glyoxylate cycle	4	2	0.28	0.02609
+GO:0000160	phosphorelay signal transduction system	17	4	1.18	0.02614
+GO:0009086	methionine biosynthetic process	18	6	1.24	0.02706
+GO:0006488	dolichol-linked oligosaccharide biosynth...	10	3	0.69	0.02737
+GO:0006468	protein phosphorylation	157	18	10.86	0.03003
+GO:0006890	retrograde vesicle-mediated transport, G...	19	4	1.31	0.03817
+GO:0010038	response to metal ion	9	3	0.62	0.04140
+GO:0019509	L-methionine salvage from methylthioaden...	5	2	0.35	0.04150
+GO:0034470	ncRNA processing	221	8	15.28	0.04277
+GO:0006414	translational elongation	30	7	2.07	0.04462
+GO:0046835	carbohydrate phosphorylation	12	3	0.83	0.04527

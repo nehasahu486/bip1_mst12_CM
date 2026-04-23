@@ -1,0 +1,19 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0000272	polysaccharide catabolic process	102	16	5.77	0.00062
+GO:0005975	carbohydrate metabolic process	404	46	22.87	0.00118
+GO:0006032	chitin catabolic process	16	5	0.91	0.00148
+GO:0006044	N-acetylglucosamine metabolic process	2	2	0.11	0.00320
+GO:0031142	induction of conjugation upon nitrogen s...	2	2	0.11	0.00320
+GO:0019290	siderophore biosynthetic process	2	2	0.11	0.00320
+GO:0035672	oligopeptide transmembrane transport	13	4	0.74	0.00481
+GO:0030245	cellulose catabolic process	22	5	1.25	0.00671
+GO:0008152	metabolic process	3931	227	222.53	0.00760
+GO:0055085	transmembrane transport	606	55	34.3	0.01065
+GO:0006508	proteolysis	341	23	19.3	0.01393
+GO:0044550	secondary metabolite biosynthetic proces...	53	11	3	0.01823
+GO:0006878	intracellular copper ion homeostasis	11	3	0.62	0.02115
+GO:0009058	biosynthetic process	1953	74	110.56	0.02481
+GO:0042438	melanin biosynthetic process	5	2	0.28	0.02852
+GO:0030001	metal ion transport	101	13	5.72	0.03275
+GO:0006694	steroid biosynthetic process	28	4	1.59	0.04108
+GO:0006559	L-phenylalanine catabolic process	6	2	0.34	0.04120

@@ -1,0 +1,21 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0003878	ATP citrate synthase activity	4	3	0.38	0.0032
+GO:0030600	feruloyl esterase activity	13	5	1.23	0.0051
+GO:0031177	phosphopantetheine binding	36	9	3.42	0.0054
+GO:0008559	ABC-type xenobiotic transporter activity	2	2	0.19	0.0090
+GO:0004043	L-aminoadipate-semialdehyde dehydrogenas...	2	2	0.19	0.0090
+GO:0003865	3-oxo-5-alpha-steroid 4-dehydrogenase ac...	2	2	0.19	0.0090
+GO:0016712	oxidoreductase activity, acting on paire...	15	5	1.42	0.0102
+GO:0102483	scopolin beta-glucosidase activity	10	4	0.95	0.0106
+GO:0004181	metallocarboxypeptidase activity	11	4	1.04	0.0155
+GO:0046872	metal ion binding	1395	136	132.5	0.0185
+GO:0035673	oligopeptide transmembrane transporter a...	12	4	1.14	0.0215
+GO:0000293	ferric-chelate reductase activity	12	4	1.14	0.0215
+GO:0016788	hydrolase activity, acting on ester bond...	325	31	30.87	0.0233
+GO:0008422	beta-glucosidase activity	14	4	1.33	0.0373
+GO:0003824	catalytic activity	3791	385	360.09	0.0430
+GO:0008236	serine-type peptidase activity	68	13	6.46	0.0465
+GO:0004568	chitinase activity	15	4	1.42	0.0472
+GO:0008553	P-type proton-exporting transporter acti...	4	2	0.38	0.0475
+GO:0004075	biotin carboxylase activity	4	2	0.38	0.0475
+GO:0030246	carbohydrate binding	70	10	6.65	0.0497

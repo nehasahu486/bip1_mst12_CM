@@ -1,0 +1,7 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0016020	membrane	2511	288	223.83	7.9e-14
+GO:0005576	extracellular region	184	33	16.4	0.00024
+GO:0019028	viral capsid	3	2	0.27	0.02240
+GO:0016592	mediator complex	21	5	1.87	0.03392
+GO:0031105	septin complex	4	2	0.36	0.04216
+GO:0009279	cell outer membrane	4	2	0.36	0.04216

@@ -1,0 +1,41 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0106074	aminoacyl-tRNA metabolism involved in tr...	7	4	0.13	3.7e-06
+GO:0007010	cytoskeleton organization	84	5	1.55	0.00033
+GO:0045901	positive regulation of translational elo...	2	2	0.04	0.00034
+GO:0045905	positive regulation of translational ter...	2	2	0.04	0.00034
+GO:0006432	phenylalanyl-tRNA aminoacylation	3	2	0.06	0.00100
+GO:0008612	peptidyl-lysine modification to peptidyl...	4	2	0.07	0.00198
+GO:0120009	intermembrane lipid transfer	5	2	0.09	0.00326
+GO:0006541	glutamine metabolic process	18	3	0.33	0.00410
+GO:0007018	microtubule-based movement	21	4	0.39	0.00472
+GO:0006452	translational frameshifting	6	2	0.11	0.00484
+GO:0006048	UDP-N-acetylglucosamine biosynthetic pro...	6	2	0.11	0.00484
+GO:0006414	translational elongation	30	5	0.55	0.00540
+GO:0042823	pyridoxal phosphate biosynthetic process	7	2	0.13	0.00669
+GO:0006098	pentose-phosphate shunt	9	2	0.17	0.01119
+GO:0051258	protein polymerization	27	3	0.5	0.01304
+GO:0006190	inosine salvage	1	1	0.02	0.01846
+GO:0030448	hyphal growth	1	1	0.02	0.01846
+GO:0071590	nicotinamide riboside biosynthetic proce...	1	1	0.02	0.01846
+GO:0071592	nicotinic acid riboside biosynthetic pro...	1	1	0.02	0.01846
+GO:0097054	L-glutamate biosynthetic process	1	1	0.02	0.01846
+GO:0019478	D-amino acid catabolic process	1	1	0.02	0.01846
+GO:0006425	glutaminyl-tRNA aminoacylation	1	1	0.02	0.01846
+GO:0106259	cell-to-cell migration in host	1	1	0.02	0.01846
+GO:0006438	valyl-tRNA aminoacylation	1	1	0.02	0.01846
+GO:1903087	mitotic spindle pole body duplication	1	1	0.02	0.01846
+GO:0098863	nuclear migration by microtubule mediate...	2	1	0.04	0.03658
+GO:0000379	tRNA-type intron splice site recognition...	2	1	0.04	0.03658
+GO:0033609	oxalate metabolic process	2	1	0.04	0.03658
+GO:0007205	protein kinase C-activating G protein-co...	2	1	0.04	0.03658
+GO:0010142	farnesyl diphosphate biosynthetic proces...	2	1	0.04	0.03658
+GO:1904263	positive regulation of TORC1 signaling	2	1	0.04	0.03658
+GO:0032049	cardiolipin biosynthetic process	2	1	0.04	0.03658
+GO:0031388	organic acid phosphorylation	2	1	0.04	0.03658
+GO:0006424	glutamyl-tRNA aminoacylation	2	1	0.04	0.03658
+GO:0006428	isoleucyl-tRNA aminoacylation	2	1	0.04	0.03658
+GO:0048312	intracellular distribution of mitochondr...	2	1	0.04	0.03658
+GO:0006431	methionyl-tRNA aminoacylation	2	1	0.04	0.03658
+GO:0071840	cellular component organization or bioge...	833	15	15.38	0.03694
+GO:0000160	phosphorelay signal transduction system	17	2	0.31	0.03840
+GO:0008152	metabolic process	3931	79	72.56	0.04438

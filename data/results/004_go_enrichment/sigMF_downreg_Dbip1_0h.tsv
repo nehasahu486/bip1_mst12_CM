@@ -1,0 +1,57 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0005524	ATP binding	656	121	54.85	7.1e-18
+GO:0003723	RNA binding	328	88	27.43	2.7e-14
+GO:0004386	helicase activity	103	45	8.61	2.6e-13
+GO:0003676	nucleic acid binding	1015	212	84.87	7.5e-12
+GO:0003724	RNA helicase activity	30	17	2.51	1.7e-11
+GO:0016887	ATP hydrolysis activity	201	46	16.81	1.6e-10
+GO:0140658	ATP-dependent chromatin remodeler activi...	26	13	2.17	6.1e-08
+GO:0030515	snoRNA binding	19	13	1.59	9.7e-08
+GO:0003677	DNA binding	465	79	38.88	1.2e-07
+GO:0017056	structural constituent of nuclear pore	12	8	1	8.4e-07
+GO:0005515	protein binding	905	116	75.67	9.1e-06
+GO:0140359	ABC-type transporter activity	41	14	3.43	1.2e-05
+GO:0000981	DNA-binding transcription factor activit...	189	31	15.8	0.00020
+GO:0000155	phosphorelay sensor kinase activity	13	6	1.09	0.00034
+GO:0000156	phosphorelay response regulator activity	13	6	1.09	0.00034
+GO:0043021	ribonucleoprotein complex binding	27	10	2.26	0.00062
+GO:0034511	U3 snoRNA binding	6	4	0.5	0.00063
+GO:0008270	zinc ion binding	671	79	56.1	0.00095
+GO:0008320	protein transmembrane transporter activi...	9	4	0.75	0.00218
+GO:0032549	ribonucleoside binding	4	3	0.33	0.00218
+GO:0070180	large ribosomal subunit rRNA binding	4	3	0.33	0.00218
+GO:0016818	hydrolase activity, acting on acid anhyd...	333	66	27.84	0.00364
+GO:0004725	protein tyrosine phosphatase activity	20	6	1.67	0.00468
+GO:0042802	identical protein binding	45	11	3.76	0.00484
+GO:0016817	hydrolase activity, acting on acid anhyd...	335	68	28.01	0.00628
+GO:0004449	isocitrate dehydrogenase (NAD+) activity	2	2	0.17	0.00698
+GO:0004534	5'-3' RNA exonuclease activity	2	2	0.17	0.00698
+GO:0097157	pre-mRNA intronic binding	2	2	0.17	0.00698
+GO:0004144	diacylglycerol O-acyltransferase activit...	2	2	0.17	0.00698
+GO:0030943	mitochondrion targeting sequence binding	2	2	0.17	0.00698
+GO:0003887	DNA-directed DNA polymerase activity	16	5	1.34	0.00808
+GO:0003958	NADPH-hemoprotein reductase activity	6	3	0.5	0.00961
+GO:0003746	translation elongation factor activity	17	5	1.42	0.01067
+GO:0005388	P-type calcium transporter activity	7	3	0.59	0.01578
+GO:0004100	chitin synthase activity	7	3	0.59	0.01578
+GO:0015095	magnesium ion transmembrane transporter ...	7	3	0.59	0.01578
+GO:0017111	ribonucleoside triphosphate phosphatase ...	304	61	25.42	0.01616
+GO:0003899	DNA-directed 5'-3' RNA polymerase activi...	32	9	2.68	0.01718
+GO:0003684	damaged DNA binding	19	5	1.59	0.01744
+GO:0030623	U5 snRNA binding	3	2	0.25	0.01978
+GO:0008139	nuclear localization sequence binding	3	2	0.25	0.01978
+GO:0004375	glycine dehydrogenase (decarboxylating) ...	3	2	0.25	0.01978
+GO:0003918	DNA topoisomerase type II (double strand...	3	2	0.25	0.01978
+GO:0005347	ATP transmembrane transporter activity	20	5	1.67	0.02170
+GO:0008138	protein tyrosine/serine/threonine phosph...	8	3	0.67	0.02369
+GO:0003682	chromatin binding	34	9	2.84	0.02531
+GO:0019843	rRNA binding	27	10	2.26	0.03076
+GO:0016787	hydrolase activity	1442	148	120.57	0.03323
+GO:0050660	flavin adenine dinucleotide binding	166	18	13.88	0.03349
+GO:0031491	nucleosome binding	5	3	0.42	0.03730
+GO:0042162	telomeric DNA binding	11	3	0.92	0.03735
+GO:0102265	tRNA-dihydrouridine47 synthase activity	4	2	0.33	0.03738
+GO:0042134	rRNA primary transcript binding	4	2	0.33	0.03738
+GO:0033961	cis-stilbene-oxide hydrolase activity	4	2	0.33	0.03738
+GO:0070330	aromatase activity	4	2	0.33	0.03738
+GO:0000287	magnesium ion binding	57	9	4.77	0.04554

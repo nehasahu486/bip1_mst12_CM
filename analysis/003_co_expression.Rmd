@@ -1,0 +1,403 @@
+---
+title: "Check if DEGs in Dbip1 and Dmst12 are co-regulated or co expressed"
+author: "Neha Sahu"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  github_document:
+    toc: true
+    toc_depth: 3
+    dev: "png"
+    html_preview: false
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    highlight: pygments
+    code_folding: show
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+library(here)
+source(here("scripts","analysis_config.R"))
+init_analysis("003_co_expression")
+
+knitr::opts_chunk$set(
+  fig.path="../data/results/003_co_expression/00_figures/"
+)
+```
+
+# Description
+
+This analysis continues from 002_rna_seq.Rmd and checks the
+co-expression patterns between mst12 and bip1 genes in *Magnaporthe
+oryzae*. The goal is to see if bip1 and mst12 are co-regulated by
+checking their expression patterns across different mutant strains
+(Dbip1, Dmst12) and timepoints (0h, 4h, and 24h). In simple terms, I
+want to see if mst12 and bip1 show coordinated/similar regulation
+patterns.
+
+## Objectives:
+
+1.  Create Euler diagrams to visualize overlap of differentially
+    expressed genes between mutant strains
+
+2.  Generate correlation matrices to assess co-expression patterns
+
+3.  Make heatmaps to visualize expression profiles of differently
+    expressed genes
+
+## Load Libraries
+
+```{r load_lib, message=F, warning=F}
+library(tidyverse)
+library(eulerr) # for eulerr plot
+library(corrplot) # for correlation plot
+library(gplots) # for heatmap
+```
+
+# **Eulerr plots**
+
+### Merged DEGs File
+
+```{r merge_degs, message=F, warning=F}
+merged_data <- read_csv(here("data/results/002_rna_seq/merged_DEGs_guy11_vs_Dbip1_Dmst12.csv"))
+
+degs_filt <- merged_data %>%
+  select(target_id,Comparison,DEG_status) %>%
+  filter(DEG_status!="not_DEG") %>%
+  mutate(time=word(Comparison,sep="_",4,4),
+         sample=word(Comparison,sep="_",3,3),
+         DEG_status=gsub("_in_guy11","",DEG_status)) %>%
+  select(-Comparison) %>%
+  distinct()
+unique(degs_filt$time)
+
+
+```
+
+### Downregulated in Guy11 - Upregulated in Dbip1, Dmst12
+
+```{r downregs_in_guy11_euler, fig.align='center',fig.width=10,fig.height=7, warning=F}
+# Function to create Euler plots for each timepoint
+create_euler_plot <- function(time_point, deg_status, title_suffix) {
+  downreg <- degs_filt %>%
+    filter(DEG_status == deg_status, time == time_point) %>%
+    distinct() %>%
+    select(-DEG_status, -time) %>%
+    arrange(target_id, factor(sample, levels = c("Dbip1", "Dmst12"))) %>%
+    aggregate(. ~ target_id, toString)
+  
+  downreg_set <- data.frame(table(downreg$sample))
+  downreg_set$Var1 <- gsub(", ", "&", downreg_set$Var1)
+  downreg_data <- setNames(downreg_set$Freq, downreg_set$Var1)
+  
+  euler_plot <- euler(downreg_data, shape = "ellipse", input = c("disjoint"), loss = c("abs"))
+  
+  # Save data
+  save_data(downreg_set, paste0("euler_", gsub(" ", "_", tolower(title_suffix)), "_", time_point))
+ 
+  return(list(data = downreg_set, euler_obj = euler_plot))
+}
+
+# Create plots for downregulated genes at each timepoint
+downreg_0h <- create_euler_plot("0h", "downreg", "Downregulated genes in guy11")
+downreg_4h <- create_euler_plot("4h", "downreg", "Downregulated genes in guy11")
+downreg_24h <- create_euler_plot("24h", "downreg", "Downregulated genes in guy11")
+
+plot(downreg_0h$euler_obj,fills = list(fill = c("#fdc086", "#beaed4", "#ffff99")),
+     legend = TRUE,
+     quantities = TRUE,
+     labels = list(font = 4, cex = 1),
+     lty = 1:4,
+     main = "Downregulated genes in guy11 at 0h")
+plot(downreg_4h$euler_obj,fills = list(fill = c("#fdc086", "#beaed4", "#ffff99")),
+     legend = TRUE,
+     quantities = TRUE,
+     labels = list(font = 4, cex = 1),
+     lty = 1:4,
+     main = "Downregulated genes in guy11 at 4h")
+plot(downreg_24h$euler_obj,fills = list(fill = c("#fdc086", "#beaed4", "#ffff99")),
+     legend = TRUE,
+     quantities = TRUE,
+     labels = list(font = 4, cex = 1),
+     lty = 1:4,
+     main = "Downregulated genes in guy11 at 24h")
+
+```
+
+### Upregulated in Guy11 - Downregulated in Dbip1, Dmst12
+
+```{r upregs_in_guy11_euler, fig.align='center',fig.width=10,fig.height=7, warning=F}
+# Function to create Euler plots for each timepoint
+create_euler_plot <- function(time_point, deg_status, title_suffix) {
+  upreg <- degs_filt %>%
+    filter(DEG_status == deg_status, time == time_point) %>%
+    distinct() %>%
+    select(-DEG_status, -time) %>%
+    arrange(target_id, factor(sample, levels = c("Dbip1", "Dmst12"))) %>%
+    aggregate(. ~ target_id, toString)
+  
+  upreg_set <- data.frame(table(upreg$sample))
+  upreg_set$Var1 <- gsub(", ", "&", upreg_set$Var1)
+  upreg_data <- setNames(upreg_set$Freq, upreg_set$Var1)
+  
+  euler_plot <- euler(upreg_data, shape = "ellipse", input = c("disjoint"), loss = c("abs"))
+  
+  # Save data and plot
+  save_data(upreg_set, paste0("euler_", gsub(" ", "_", tolower(title_suffix)), "_", time_point))
+  
+  return(list(data = upreg_set, euler_obj = euler_plot))
+}
+
+# Create plots for upregulated genes at each timepoint
+upreg_0h <- create_euler_plot("0h", "upreg", "upregulated genes in guy11")
+upreg_4h <- create_euler_plot("4h", "upreg", "upregulated genes in guy11")
+upreg_24h <- create_euler_plot("24h", "upreg", "upregulated genes in guy11")
+
+plot(upreg_0h$euler_obj,fills = list(fill = c("#fdc086", "#beaed4", "#ffff99")),
+     legend = TRUE,
+     quantities = TRUE,
+     labels = list(font = 4, cex = 1),
+     lty = 1:4,
+     main = "Upregulated genes in guy11 at 0h")
+plot(upreg_4h$euler_obj,fills = list(fill = c("#fdc086", "#beaed4", "#ffff99")),
+     legend = TRUE,
+     quantities = TRUE,
+     labels = list(font = 4, cex = 1),
+     lty = 1:4,
+     main = "Upregulated genes in guy11 at 4h")
+plot(upreg_24h$euler_obj,fills = list(fill = c("#fdc086", "#beaed4", "#ffff99")),
+     legend = TRUE,
+     quantities = TRUE,
+     labels = list(font = 4, cex = 1),
+     lty = 1:4,
+     main = "Upregulated genes in guy11 at 24h")
+
+```
+
+# **Correlation Between Samples**
+
+### Load TPM table
+
+```{r load_tpm}
+tpm <- read_csv(here("data/results/002_rna_seq/TPM_table.csv"))
+colnames(tpm)
+
+tpm_corr<-data.matrix(tpm[,-1])
+head(tpm_corr[1,])
+```
+
+### Calculate and Plot Pearson Correlation Between Samples - For All Genes
+
+```{r plot_pcorr, fig.align='center',fig.width=10,fig.height=7, warning=F }
+M<-cor(tpm_corr, method="pearson",use="pairwise.complete.obs")
+head(M[1,])
+corrplot(M,type="full",method="circle",
+         cl.cex=0.5,
+         main="All expressed genes", is.corr=F,col = COL2('BrBG'),
+         tl.cex = 1,tl.srt = 45,addCoef.col = 'black',
+         diag=T,
+         tl.col = c(rep("#fdc086",3),#bip1
+                    rep("#beaed4",3),#mst12
+                    rep("#7fc97f",3))) #guy11
+```
+
+### Calculate and Plot Pearson Correlation Between Samples - For Genes Upregulated in Guy11
+
+```{r plot_pcorr_upregs_guy11, fig.align='center',fig.width=10,fig.height=7, warning=F}
+
+degs_pcorr <- merged_data %>%
+  select(target_id,Comparison,DEG_status) %>%
+  filter(DEG_status=="upreg_in_guy11") %>%
+  mutate(time=word(Comparison,sep="_",4,4),
+         sample=word(Comparison,sep="_",3,3)) %>%
+  select(-Comparison) %>%
+  filter(sample!="tbip1") %>%
+  select(target_id) %>%
+  distinct()
+head(degs_pcorr)
+
+tpm_degs <- tpm %>%
+  filter(target_id %in% degs_pcorr$target_id) %>%
+  select(target_id,
+         Guy11_0h,Guy11_4h,Guy11_24h,
+         Dbip1_0h,Dbip1_4h,Dbip1_24h,
+         Dmst12_0h,Dmst12_4h,Dmst12_24h)
+tpm_degs_corr<-data.matrix(tpm_degs[,-1])
+head(tpm_degs_corr[1,])
+M_degs<-cor(tpm_degs_corr, method="pearson",use="pairwise.complete.obs")
+head(M_degs[1,])
+corrplot(M_degs,type="full",method="circle",
+         cl.cex=0.5,
+         main="Upregs in Guy11", is.corr=F,col = COL2('BrBG'),
+         tl.cex = 1,tl.srt = 45,addCoef.col = 'black',
+         diag=T,
+         tl.col = c(rep("#7fc97f",3),#guy11
+                    rep("#fdc086",3),#bip1
+                    rep("#beaed4",3)#mst12
+                    )) 
+
+```
+
+### Calculate and Plot Pearson Correlation Between Samples - For Genes Downregulated in Guy11
+
+```{r plot_pcorr_downregs_guy11, fig.align='center',fig.width=10,fig.height=7, warning=F}
+
+degs_pcorr <- merged_data %>%
+  select(target_id,Comparison,DEG_status) %>%
+  filter(DEG_status=="downreg_in_guy11") %>%
+  mutate(time=word(Comparison,sep="_",4,4),
+         sample=word(Comparison,sep="_",3,3)) %>%
+  select(-Comparison) %>%
+  filter(sample!="tbip1") %>%
+  select(target_id) %>%
+  distinct()
+head(degs_pcorr)
+
+tpm_degs <- tpm %>%
+  filter(target_id %in% degs_pcorr$target_id) %>%
+  select(target_id,
+         Guy11_0h,Guy11_4h,Guy11_24h,
+         Dbip1_0h,Dbip1_4h,Dbip1_24h,
+         Dmst12_0h,Dmst12_4h,Dmst12_24h)
+tpm_degs_corr<-data.matrix(tpm_degs[,-1])
+head(tpm_degs_corr[1,])
+M_degs<-cor(tpm_degs_corr, method="pearson",use="pairwise.complete.obs")
+head(M_degs[1,])
+corrplot(M_degs,type="full",method="circle",
+         cl.cex=0.5,
+         main="Downregs in Guy11", is.corr=F,col = COL2('BrBG'),
+         tl.cex = 1,tl.srt = 45,addCoef.col = 'black',
+         diag=T,
+         tl.col = c(rep("#7fc97f",3),#guy11
+                    rep("#fdc086",3),#bip1
+                    rep("#beaed4",3)#mst12
+                    )) 
+
+
+```
+
+# **Heatmaps**
+
+### Load DEGs in Dmst12 and Dbip1 for Heatmap
+
+```{r load_degs_hm}
+degs_heat <- merged_data %>%
+  select(target_id,Comparison,DEG_status) %>%
+  filter(DEG_status!="Not_DEG") %>%
+  mutate(time=word(Comparison,sep="_",4,4),
+         sample=word(Comparison,sep="_",3,3)) %>%
+  select(-Comparison) %>%
+  filter(sample!="tbip1") %>%
+  mutate(DEG_status=gsub("_in_guy11","",DEG_status)) %>%
+  left_join(tpm,by="target_id") %>%
+  distinct()
+head(degs_heat)
+```
+
+### Upregs in Guy11
+
+```{r upreg_heatmap, fig.align='center',fig.width=7,fig.height=15, warning=F}
+upreg<-degs_heat %>%
+  filter(DEG_status=="upreg") %>%
+  select(-DEG_status,-time,-sample) %>%
+  distinct() %>%
+  column_to_rownames(var="target_id") %>%
+  select(Guy11_0h, Guy11_4h, Guy11_24h,
+         Dbip1_0h,Dbip1_4h,Dbip1_24h,
+         Dmst12_0h,Dmst12_4h,Dmst12_24h)
+
+upreg_matrix<-data.matrix(upreg)
+
+# Use hierarchical clustering
+mycols = colorRampPalette(c("blue","white","red"))(100) 
+hr <- hclust(as.dist(1-cor(t(upreg_matrix), method="pearson")), method="average") 
+dend <- as.dendrogram(hr) # Convert to dendrogram
+row_order <- order.dendrogram(dend) # Row order from the hierarchical clustering
+upreg_matrix_ordered <- upreg_matrix[row_order, ] %>%  # Reorder matrix based on the clustering
+  as.data.frame() %>%
+  rownames_to_column(var = "target_id")  # Add row names as a column
+
+# Save ordered matrix
+save_data(upreg_matrix_ordered, "upreg_matrix_ordered", format = "txt")
+
+pdf_path <- here::here("data/results/00_figures/003_co_expression", "upregs_guy11vsDbip1_Dmst12.pdf")
+#pdf(pdf_path, width = 12, height = 20)
+heatmap.2(upreg_matrix, 
+                  Rowv = as.dendrogram(hr), 
+                  dendrogram = "row", 
+                  trace = "none",  
+                  col = mycols, 
+                  keysize = 1, 
+                  key.title = "Title", 
+                  Colv = FALSE,
+                  scale = c("row"), 
+                  cexRow = 0.5, 
+                  cexCol = 1, 
+                  srtCol = NULL,  
+                  srtRow = NULL, 
+                  adjRow = c(0,NA), 
+                  sepcolor = "white", 
+                  margins = c(7,15), 
+                  lwid = c(2,8),
+                  lhei = c(2,8), 
+                  main = "upregs", 
+                  na.color = "black")
+```
+
+### Downregs in Guy11
+
+```{r downreg_heatmap, fig.align='center',fig.width=7,fig.height=15, warning=F}
+downreg<-degs_heat %>%
+  filter(DEG_status=="downreg", sample!="tbip1") %>%
+  select(-DEG_status,-time,-sample) %>%
+  distinct() %>%
+  column_to_rownames(var="target_id") %>%
+  select(Guy11_0h, Guy11_4h, Guy11_24h,
+         Dbip1_0h,Dbip1_4h,Dbip1_24h,
+         Dmst12_0h,Dmst12_4h,Dmst12_24h)
+
+downreg_matrix<-data.matrix(downreg)
+
+# Use hierarchical clustering
+mycols = colorRampPalette(c("blue","white","red"))(100) 
+hr <- hclust(as.dist(1-cor(t(downreg_matrix), method="pearson")), method="average") 
+dend <- as.dendrogram(hr) # Convert to dendrogram
+row_order <- order.dendrogram(dend) # Row order from the hierarchical clustering
+downreg_matrix_ordered <- downreg_matrix[row_order, ] %>%  # Reorder matrix based on the clustering
+  as.data.frame() %>%
+  rownames_to_column(var = "target_id")  # Add row names as a column
+
+# Save ordered matrix
+save_data(downreg_matrix_ordered, "downreg_matrix_ordered", format = "txt")
+
+pdf_path <- here::here("data/results/00_figures/003_co_expression", "downregs_guy11vsDbip1_Dmst12.pdf")
+#pdf(pdf_path, width = 12, height = 20)
+heatmap.2(downreg_matrix, 
+                  Rowv = as.dendrogram(hr), 
+                  dendrogram = "row", 
+                  trace = "none",  
+                  col = mycols, 
+                  keysize = 1, 
+                  key.title = "Title", 
+                  Colv = FALSE,
+                  scale = c("row"), 
+                  cexRow = 0.5, 
+                  cexCol = 1, 
+                  srtCol = NULL,  
+                  srtRow = NULL, 
+                  adjRow = c(0,NA), 
+                  sepcolor = "white", 
+                  margins = c(7,15), 
+                  lwid = c(2,8),
+                  lhei = c(2,8), 
+                  main = "downregs", 
+                  na.color = "black")
+```
+
+```{r}
+sessionInfo()
+```

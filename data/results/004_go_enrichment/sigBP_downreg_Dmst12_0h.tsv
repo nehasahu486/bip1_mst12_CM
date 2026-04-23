@@ -1,0 +1,39 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0006364	rRNA processing	138	61	8.9	5.7e-14
+GO:0000463	maturation of LSU-rRNA from tricistronic...	19	12	1.23	1.5e-10
+GO:0000447	endonucleolytic cleavage in ITS1 to sepa...	16	11	1.03	2.4e-10
+GO:0000472	endonucleolytic cleavage to generate mat...	14	10	0.9	9.1e-10
+GO:0000480	endonucleolytic cleavage in 5'-ETS of tr...	13	9	0.84	1.0e-08
+GO:0000462	maturation of SSU-rRNA from tricistronic...	34	22	2.19	1.2e-08
+GO:0042274	ribosomal small subunit biogenesis	49	29	3.16	1.7e-05
+GO:0042273	ribosomal large subunit biogenesis	41	22	2.64	1.8e-05
+GO:0006355	regulation of DNA-templated transcriptio...	428	39	27.6	0.00013
+GO:0000466	maturation of 5.8S rRNA from tricistroni...	33	17	2.13	0.00019
+GO:0006338	chromatin remodeling	84	14	5.42	0.00063
+GO:0000055	ribosomal large subunit export from nucl...	8	4	0.52	0.00097
+GO:0000027	ribosomal large subunit assembly	15	5	0.97	0.00191
+GO:0031167	rRNA methylation	14	5	0.9	0.00240
+GO:0110136	protein-RNA complex remodeling	2	2	0.13	0.00415
+GO:0006552	leucine catabolic process	2	2	0.13	0.00415
+GO:0007089	traversing start control point of mitoti...	2	2	0.13	0.00415
+GO:0097623	potassium ion export across plasma membr...	2	2	0.13	0.00415
+GO:1902626	assembly of large subunit precursor of p...	6	3	0.39	0.00460
+GO:0006559	L-phenylalanine catabolic process	6	3	0.39	0.00460
+GO:0016973	poly(A)+ mRNA export from nucleus	12	4	0.77	0.00558
+GO:0042255	ribosome assembly	24	9	1.55	0.00747
+GO:0046656	folic acid biosynthetic process	7	3	0.45	0.00767
+GO:0042254	ribosome biogenesis	180	75	11.61	0.00855
+GO:0007049	cell cycle	246	25	15.86	0.01101
+GO:0035998	7,8-dihydroneopterin 3'-triphosphate bio...	3	2	0.19	0.01192
+GO:0006572	tyrosine catabolic process	3	2	0.19	0.01192
+GO:0006574	valine catabolic process	3	2	0.19	0.01192
+GO:2000232	regulation of rRNA processing	3	2	0.19	0.01192
+GO:0051056	regulation of small GTPase mediated sign...	26	5	1.68	0.01663
+GO:0000160	phosphorelay signal transduction system	17	4	1.1	0.02075
+GO:0006265	DNA topological change	4	2	0.26	0.02282
+GO:0002943	tRNA dihydrouridine synthesis	4	2	0.26	0.02282
+GO:0006744	ubiquinone biosynthetic process	11	3	0.71	0.02981
+GO:0006396	RNA processing	352	79	22.7	0.03513
+GO:0046654	tetrahydrofolate biosynthetic process	5	2	0.32	0.03643
+GO:0000056	ribosomal small subunit export from nucl...	5	2	0.32	0.03643
+GO:0006546	glycine catabolic process	5	2	0.32	0.03643

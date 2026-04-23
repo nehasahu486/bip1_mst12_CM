@@ -1,0 +1,12 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0003735	structural constituent of ribosome	135	26	8.11	9.5e-08
+GO:0003777	microtubule motor activity	14	5	0.84	0.00098
+GO:0030170	pyridoxal phosphate binding	67	11	4.03	0.00199
+GO:0016491	oxidoreductase activity	982	81	59.03	0.00320
+GO:0008017	microtubule binding	18	5	1.08	0.00343
+GO:0010181	FMN binding	34	7	2.04	0.00354
+GO:0015662	P-type ion transporter activity	25	5	1.5	0.02005
+GO:0003700	DNA-binding transcription factor activit...	249	26	14.97	0.02460
+GO:0019843	rRNA binding	27	6	1.62	0.03383
+GO:0000981	DNA-binding transcription factor activit...	189	18	11.36	0.03519
+GO:0004571	mannosyl-oligosaccharide 1,2-alpha-manno...	14	3	0.84	0.04787

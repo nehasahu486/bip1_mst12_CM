@@ -1,0 +1,35 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0005524	ATP binding	656	86	40.64	8.9e-12
+GO:0003723	RNA binding	328	62	20.32	5.9e-09
+GO:0003724	RNA helicase activity	30	12	1.86	8.8e-08
+GO:0030515	snoRNA binding	19	12	1.18	1.9e-07
+GO:0016887	ATP hydrolysis activity	201	32	12.45	6.6e-07
+GO:0004386	helicase activity	103	26	6.38	1.7e-06
+GO:0140658	ATP-dependent chromatin remodeler activi...	26	9	1.61	1.5e-05
+GO:0003676	nucleic acid binding	1015	140	62.88	3.6e-05
+GO:0005515	protein binding	905	85	56.07	0.00015
+GO:0034511	U3 snoRNA binding	6	4	0.37	0.00020
+GO:0003677	DNA binding	465	51	28.81	0.00028
+GO:0140359	ABC-type transporter activity	41	9	2.54	0.00074
+GO:0043021	ribonucleoprotein complex binding	27	6	1.67	0.00083
+GO:0032549	ribonucleoside binding	4	3	0.25	0.00090
+GO:0042802	identical protein binding	45	10	2.79	0.00267
+GO:0050660	flavin adenine dinucleotide binding	166	18	10.28	0.00312
+GO:0016817	hydrolase activity, acting on acid anhyd...	335	50	20.75	0.00346
+GO:0004449	isocitrate dehydrogenase (NAD+) activity	2	2	0.12	0.00383
+GO:0017111	ribonucleoside triphosphate phosphatase ...	304	45	18.83	0.00572
+GO:0000156	phosphorelay response regulator activity	13	4	0.81	0.00665
+GO:0005388	P-type calcium transporter activity	7	3	0.43	0.00686
+GO:0003918	DNA topoisomerase type II (double strand...	3	2	0.19	0.01102
+GO:0004375	glycine dehydrogenase (decarboxylating) ...	3	2	0.19	0.01102
+GO:0003899	DNA-directed 5'-3' RNA polymerase activi...	32	9	1.98	0.01773
+GO:0008320	protein transmembrane transporter activi...	9	3	0.56	0.02109
+GO:0070180	large ribosomal subunit rRNA binding	4	2	0.25	0.02114
+GO:0102265	tRNA-dihydrouridine47 synthase activity	4	2	0.25	0.02114
+GO:0005347	ATP transmembrane transporter activity	20	4	1.24	0.03194
+GO:0042803	protein homodimerization activity	5	2	0.31	0.03380
+GO:0017056	structural constituent of nuclear pore	12	3	0.74	0.03419
+GO:0051539	4 iron, 4 sulfur cluster binding	31	5	1.92	0.03999
+GO:0000155	phosphorelay sensor kinase activity	13	3	0.81	0.04245
+GO:0005525	GTP binding	125	13	7.74	0.04546
+GO:0003725	double-stranded RNA binding	6	2	0.37	0.04865

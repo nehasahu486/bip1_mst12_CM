@@ -1,0 +1,47 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0005975	carbohydrate metabolic process	404	51	27.54	0.00028
+GO:0098869	cellular oxidant detoxification	33	8	2.25	0.00220
+GO:0006094	gluconeogenesis	15	5	1.02	0.00245
+GO:0000103	sulfate assimilation	7	5	0.48	0.00281
+GO:0016310	phosphorylation	263	20	17.93	0.00392
+GO:0006096	glycolytic process	20	6	1.36	0.00447
+GO:0019354	siroheme biosynthetic process	2	2	0.14	0.00464
+GO:0019379	sulfate assimilation, phosphoadenylyl su...	2	2	0.14	0.00464
+GO:0015671	oxygen transport	2	2	0.14	0.00464
+GO:0006048	UDP-N-acetylglucosamine biosynthetic pro...	6	3	0.41	0.00539
+GO:1901576	organic substance biosynthetic process	1896	130	129.26	0.00561
+GO:0016126	sterol biosynthetic process	22	5	1.5	0.00679
+GO:0044249	cellular biosynthetic process	1863	122	127.01	0.00699
+GO:0070814	hydrogen sulfide biosynthetic process	7	3	0.48	0.00897
+GO:0009099	valine biosynthetic process	7	3	0.48	0.00897
+GO:0044396	actin cortical patch organization	13	4	0.89	0.00931
+GO:0008152	metabolic process	3931	306	268	0.00996
+GO:0045454	cell redox homeostasis	21	5	1.43	0.01180
+GO:0006006	glucose metabolic process	20	7	1.36	0.01311
+GO:0006012	galactose metabolic process	4	3	0.27	0.01325
+GO:0000105	histidine biosynthetic process	8	3	0.55	0.01362
+GO:0019344	cysteine biosynthetic process	9	3	0.61	0.01942
+GO:0009097	isoleucine biosynthetic process	9	3	0.61	0.01942
+GO:0006144	purine nucleobase metabolic process	13	4	0.89	0.02526
+GO:0097428	protein maturation by iron-sulfur cluste...	8	3	0.55	0.02532
+GO:0000162	tryptophan biosynthetic process	4	2	0.27	0.02538
+GO:0008655	pyrimidine-containing compound salvage	4	2	0.27	0.02538
+GO:0017000	antibiotic biosynthetic process	4	2	0.27	0.02538
+GO:0005992	trehalose biosynthetic process	4	2	0.27	0.02538
+GO:0042744	hydrogen peroxide catabolic process	4	2	0.27	0.02538
+GO:0006750	glutathione biosynthetic process	4	2	0.27	0.02538
+GO:0015680	protein maturation by copper ion transfe...	4	2	0.27	0.02538
+GO:0009231	riboflavin biosynthetic process	10	3	0.68	0.02636
+GO:0009086	methionine biosynthetic process	18	4	1.23	0.03039
+GO:0009058	biosynthetic process	1953	137	133.15	0.03316
+GO:0006879	intracellular iron ion homeostasis	12	4	0.82	0.03429
+GO:0006457	protein folding	90	14	6.14	0.03986
+GO:0006520	amino acid metabolic process	219	35	14.93	0.04007
+GO:0009073	aromatic amino acid family biosynthetic ...	12	5	0.82	0.04007
+GO:0042438	melanin biosynthetic process	5	2	0.34	0.04041
+GO:0019287	isopentenyl diphosphate biosynthetic pro...	5	2	0.34	0.04041
+GO:0034765	regulation of monoatomic ion transmembra...	5	2	0.34	0.04041
+GO:0006066	alcohol metabolic process	75	10	5.11	0.04267
+GO:0000413	protein peptidyl-prolyl isomerization	12	3	0.82	0.04366
+GO:0046835	carbohydrate phosphorylation	12	3	0.82	0.04366
+GO:0034599	cellular response to oxidative stress	38	6	2.59	0.04984

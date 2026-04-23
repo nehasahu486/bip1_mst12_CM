@@ -1,0 +1,88 @@
+---
+title: "Tutorial on how to root phylogenetic trees"
+author: "Neha Sahu"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  fig.width = 10, 
+  fig.height = 7
+)
+```
+
+# Introduction
+
+Camilla wanted to learn how to perform rooting on phylogenetic trees. This document uses the Species_tree generated from an orthoginder run to demonstrate the process.
+
+
+## Load libraries
+```{r }
+library(here)
+library(tidyverse)
+library(ape)
+library(phytools)
+```
+
+# Read the species tree - unmodified raw tree 
+```{r fig.align='center',fig.height=10,fig.width=6}
+tree<-read.tree(here("data/raw/001_orthologs/","SpeciesTree_rooted.txt"))
+plot(tree)
+```
+
+This tree is randomly organized, ladderize the tree using the following function: 
+
+```{r fig.align='center',fig.height=10,fig.width=6}
+LadderizeTree <- function(tree, temp_file = "temp", orientation = "left"){
+  if(file.exists(paste0("./", temp_file))){
+    stop("The chosen temporary file exists! Please choose an other temp_file name")
+  }
+  if(orientation == "left"){
+    right <- FALSE
+  }else{
+    right <- TRUE
+  }
+  tree_temp <- ladderize(tree, right = right)
+  write.tree(tree_temp, file = paste0("./", temp_file, ".tre"))
+  tree_lad <- read.tree(paste0("./", temp_file, ".tre"))
+  file.remove(paste0("./", temp_file, ".tre"))
+  return(tree_lad)
+}
+
+lad_tree<-LadderizeTree(tree)
+plot(lad_tree)
+
+tree$tip.label
+```
+# Rooting when outgroup is known
+
+You can list either one or multiple names of the tip labels (species or gene names matching with the original tree file) as an outgroup. For instance, in the example below, I am using the all species in the basidiomycota clade as an outgroup. If you want to use only one tip label as an outgroup, it would look something like root(tree, outgroup="Schiz_pombe")
+
+```{r fig.align='center',fig.height=10,fig.width=6}
+out_tree<-root(lad_tree, outgroup = c("Schiz_pombe","Rhizo_irreg","Ustil_maydi","Crypt_neofo","Pirin_GeneC","PpacP_GeneC","Pucci_strii","Pucci_grami","Candi_albic"
+,"Sacch_cerev"))
+plot(out_tree)
+```
+
+# Midpoint rooting 
+If the outgroup is not known, for example, in a gene tree, midpoint rooting can be achived using the function midpoint.root from phytools package:
+
+```{r fig.align='center',fig.height=10,fig.width=6}
+mp_tree<-midpoint.root(lad_tree)
+plot(mp_tree)
+```
+
+```{r}
+sessionInfo()
+```
+

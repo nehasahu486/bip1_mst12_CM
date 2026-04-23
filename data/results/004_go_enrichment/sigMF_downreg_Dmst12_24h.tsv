@@ -1,0 +1,25 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0016491	oxidoreductase activity	982	131	75.94	6.9e-09
+GO:0022857	transmembrane transporter activity	596	65	46.09	5.0e-05
+GO:0020037	heme binding	182	26	14.07	0.0016
+GO:0004497	monooxygenase activity	184	27	14.23	0.0039
+GO:0102483	scopolin beta-glucosidase activity	10	4	0.77	0.0051
+GO:0016757	glycosyltransferase activity	117	13	9.05	0.0056
+GO:0071949	FAD binding	77	13	5.95	0.0057
+GO:0030729	acetoacetate-CoA ligase activity	2	2	0.15	0.0060
+GO:0000166	nucleotide binding	1397	123	108.03	0.0065
+GO:0102953	hypoglycin A gamma-glutamyl transpeptida...	3	2	0.23	0.0170
+GO:0004375	glycine dehydrogenase (decarboxylating) ...	3	2	0.23	0.0170
+GO:0103068	leukotriene C4 gamma-glutamyl transferas...	3	2	0.23	0.0170
+GO:0050660	flavin adenine dinucleotide binding	166	26	12.84	0.0174
+GO:0008422	beta-glucosidase activity	14	4	1.08	0.0190
+GO:0043169	cation binding	1484	120	114.76	0.0297
+GO:0008812	choline dehydrogenase activity	16	4	1.24	0.0305
+GO:0030170	pyridoxal phosphate binding	67	10	5.18	0.0321
+GO:0036374	glutathione hydrolase activity	4	2	0.31	0.0323
+GO:0003878	ATP citrate synthase activity	4	2	0.31	0.0323
+GO:0004553	hydrolase activity, hydrolyzing O-glycos...	216	31	16.7	0.0350
+GO:0140359	ABC-type transporter activity	41	7	3.17	0.0359
+GO:0004315	3-oxoacyl-[acyl-carrier-protein] synthas...	25	5	1.93	0.0396
+GO:0009055	electron transfer activity	206	24	15.93	0.0443
+GO:0005506	iron ion binding	202	23	15.62	0.0484

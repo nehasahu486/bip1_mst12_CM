@@ -1,0 +1,20 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0000981	DNA-binding transcription factor activit...	189	29	12.79	2.6e-05
+GO:0005200	structural constituent of cytoskeleton	6	4	0.41	0.00028
+GO:0008270	zinc ion binding	671	68	45.42	0.00042
+GO:0003746	translation elongation factor activity	17	6	1.15	0.00061
+GO:0005524	ATP binding	656	66	44.41	0.00063
+GO:0008526	phosphatidylinositol transfer activity	2	2	0.14	0.00458
+GO:0002161	aminoacyl-tRNA editing activity	7	4	0.47	0.00527
+GO:0003700	DNA-binding transcription factor activit...	249	39	16.86	0.00540
+GO:0000155	phosphorelay sensor kinase activity	13	4	0.88	0.00909
+GO:0051537	2 iron, 2 sulfur cluster binding	20	5	1.35	0.00924
+GO:0003755	peptidyl-prolyl cis-trans isomerase acti...	21	5	1.42	0.01147
+GO:0016491	oxidoreductase activity	982	81	66.47	0.01148
+GO:0004332	fructose-bisphosphate aldolase activity	3	2	0.2	0.01311
+GO:0004826	phenylalanine-tRNA ligase activity	3	2	0.2	0.01311
+GO:0004075	biotin carboxylase activity	4	2	0.27	0.02504
+GO:0004364	glutathione transferase activity	4	2	0.27	0.02504
+GO:0003756	protein disulfide isomerase activity	5	2	0.34	0.03988
+GO:0000049	tRNA binding	20	4	1.35	0.04229
+GO:0106310	protein serine kinase activity	12	3	0.81	0.04289

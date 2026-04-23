@@ -1,0 +1,8 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0017102	methionyl glutamyl tRNA synthetase compl...	2	2	0.03	0.0003
+GO:0000015	phosphopyruvate hydratase complex	1	1	0.02	0.0174
+GO:0045298	tubulin complex	1	1	0.02	0.0174
+GO:0009328	phenylalanine-tRNA ligase complex	1	1	0.02	0.0174
+GO:0022625	cytosolic large ribosomal subunit	12	2	0.21	0.0177
+GO:0005874	microtubule	42	4	0.73	0.0257
+GO:0005853	eukaryotic translation elongation factor...	2	1	0.03	0.0345

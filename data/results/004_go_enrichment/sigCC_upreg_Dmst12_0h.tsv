@@ -1,0 +1,15 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0009337	sulfite reductase complex (NADPH)	2	2	0.1	0.0024
+GO:0019008	molybdopterin synthase complex	3	2	0.15	0.0071
+GO:0140453	protein aggregate center	4	2	0.2	0.0137
+GO:0071821	FANCM-MHF complex	1	1	0.05	0.0495
+GO:1990389	CUE1-UBC7 ubiquitin-conjugating enzyme c...	1	1	0.05	0.0495
+GO:0000837	Doa10p ubiquitin ligase complex	1	1	0.05	0.0495
+GO:0000839	Hrd1p ubiquitin ligase ERAD-L complex	1	1	0.05	0.0495
+GO:0120106	mitotic actomyosin contractile ring, dis...	1	1	0.05	0.0495
+GO:0009326	formate dehydrogenase complex	1	1	0.05	0.0495
+GO:0072380	TRC complex	1	1	0.05	0.0495
+GO:1903269	ornithine carbamoyltransferase inhibitor...	1	1	0.05	0.0495
+GO:0009349	riboflavin synthase complex	1	1	0.05	0.0495
+GO:0016363	nuclear matrix	1	1	0.05	0.0495
+GO:1902693	superoxide dismutase complex	1	1	0.05	0.0495

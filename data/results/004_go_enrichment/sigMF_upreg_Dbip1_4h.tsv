@@ -1,0 +1,18 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0003878	ATP citrate synthase activity	4	3	0.24	0.00081
+GO:0004568	chitinase activity	15	5	0.9	0.00135
+GO:0102483	scopolin beta-glucosidase activity	10	4	0.6	0.00197
+GO:0035673	oligopeptide transmembrane transporter a...	12	4	0.72	0.00423
+GO:0008422	beta-glucosidase activity	14	4	0.84	0.00777
+GO:0030246	carbohydrate binding	70	9	4.18	0.01838
+GO:0030527	structural constituent of chromatin	10	3	0.6	0.01850
+GO:0004075	biotin carboxylase activity	4	2	0.24	0.01968
+GO:0004252	serine-type endopeptidase activity	47	7	2.8	0.02040
+GO:0004198	calcium-dependent cysteine-type endopept...	5	2	0.3	0.03151
+GO:0008236	serine-type peptidase activity	68	11	4.06	0.03256
+GO:0050660	flavin adenine dinucleotide binding	166	17	9.91	0.03772
+GO:0016620	oxidoreductase activity, acting on the a...	27	6	1.61	0.03855
+GO:0043169	cation binding	1484	91	88.56	0.03964
+GO:0022857	transmembrane transporter activity	596	55	35.57	0.04268
+GO:0008198	ferrous iron binding	6	2	0.36	0.04542
+GO:0004499	N,N-dimethylaniline monooxygenase activi...	14	3	0.84	0.04701

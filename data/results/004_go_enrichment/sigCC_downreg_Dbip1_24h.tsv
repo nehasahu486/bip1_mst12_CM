@@ -1,0 +1,11 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0005840	ribosome	156	30	9.28	1.9e-06
+GO:0022625	cytosolic large ribosomal subunit	12	6	0.71	2.9e-05
+GO:0031262	Ndc80 complex	3	3	0.18	0.00021
+GO:1990904	ribonucleoprotein complex	333	40	19.8	0.00051
+GO:0030688	preribosome, small subunit precursor	11	4	0.65	0.00291
+GO:0140602	nucleolar peripheral inclusion body	6	3	0.36	0.00365
+GO:0005730	nucleolus	146	19	8.68	0.01169
+GO:0000776	kinetochore	33	7	1.96	0.01914
+GO:0022627	cytosolic small ribosomal subunit	11	3	0.65	0.02410
+GO:0030686	90S preribosome	19	5	1.13	0.04620

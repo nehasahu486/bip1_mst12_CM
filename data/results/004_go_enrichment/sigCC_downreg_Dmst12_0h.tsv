@@ -1,0 +1,24 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0005730	nucleolus	146	66	9.25	< 1e-30
+GO:0032040	small-subunit processome	35	25	2.22	6.7e-23
+GO:0030687	preribosome, large subunit precursor	22	15	1.39	1.2e-10
+GO:0030688	preribosome, small subunit precursor	11	8	0.7	4.0e-07
+GO:0030686	90S preribosome	19	16	1.2	1.4e-06
+GO:0034388	Pwp2p-containing subcomplex of 90S preri...	3	3	0.19	0.00025
+GO:0005635	nuclear envelope	51	13	3.23	0.00032
+GO:0005634	nucleus	1255	160	79.52	0.00043
+GO:0005739	mitochondrion	435	48	27.56	0.00043
+GO:0000428	DNA-directed RNA polymerase complex	61	12	3.86	0.00046
+GO:0030690	Noc1p-Noc2p complex	2	2	0.13	0.00401
+GO:0030691	Noc2p-Noc3p complex	2	2	0.13	0.00401
+GO:0070545	PeBoW complex	2	2	0.13	0.00401
+GO:0005622	intracellular anatomical structure	2867	267	181.65	0.00939
+GO:0005643	nuclear pore	24	6	1.52	0.01065
+GO:0034457	Mpp10 complex	3	2	0.19	0.01152
+GO:0005732	sno(s)RNA-containing ribonucleoprotein c...	19	6	1.2	0.01228
+GO:0097038	perinuclear endoplasmic reticulum	4	2	0.25	0.02207
+GO:0005742	mitochondrial outer membrane translocase...	4	2	0.25	0.02207
+GO:0031428	box C/D RNP complex	4	2	0.25	0.02207
+GO:0030915	Smc5-Smc6 complex	5	2	0.32	0.03525
+GO:0042645	mitochondrial nucleoid	12	3	0.76	0.03622
+GO:0005759	mitochondrial matrix	79	11	5.01	0.04192

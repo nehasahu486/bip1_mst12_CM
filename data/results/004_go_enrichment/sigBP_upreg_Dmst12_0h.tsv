@@ -1,0 +1,49 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0015680	protein maturation by copper ion transfe...	4	3	0.19	0.00043
+GO:0000103	sulfate assimilation	7	5	0.34	0.00102
+GO:0019344	cysteine biosynthetic process	9	4	0.43	0.00103
+GO:0019379	sulfate assimilation, phosphoadenylyl su...	2	2	0.1	0.00232
+GO:0070814	hydrogen sulfide biosynthetic process	7	3	0.34	0.00337
+GO:0009117	nucleotide metabolic process	148	11	7.14	0.00746
+GO:0098869	cellular oxidant detoxification	33	6	1.59	0.00991
+GO:0009231	riboflavin biosynthetic process	10	3	0.48	0.01037
+GO:0008655	pyrimidine-containing compound salvage	4	2	0.19	0.01305
+GO:0006750	glutathione biosynthetic process	4	2	0.19	0.01305
+GO:0005992	trehalose biosynthetic process	4	2	0.19	0.01305
+GO:0000413	protein peptidyl-prolyl isomerization	12	3	0.58	0.01770
+GO:0032220	plasma membrane fusion involved in cytog...	5	2	0.24	0.02106
+GO:0019509	L-methionine salvage from methylthioaden...	5	2	0.24	0.02106
+GO:0019287	isopentenyl diphosphate biosynthetic pro...	5	2	0.24	0.02106
+GO:0009408	response to heat	10	3	0.48	0.03048
+GO:0006048	UDP-N-acetylglucosamine biosynthetic pro...	6	2	0.29	0.03060
+GO:0009099	valine biosynthetic process	7	2	0.34	0.04149
+GO:0042026	protein refolding	7	2	0.34	0.04149
+GO:0019243	methylglyoxal catabolic process to D-lac...	1	1	0.05	0.04824
+GO:0051091	positive regulation of DNA-binding trans...	1	1	0.05	0.04824
+GO:0006228	UTP biosynthetic process	1	1	0.05	0.04824
+GO:0070966	nuclear-transcribed mRNA catabolic proce...	1	1	0.05	0.04824
+GO:0006217	deoxycytidine catabolic process	1	1	0.05	0.04824
+GO:0010043	response to zinc ion	1	1	0.05	0.04824
+GO:0010045	response to nickel cation	1	1	0.05	0.04824
+GO:0015677	copper ion import	1	1	0.05	0.04824
+GO:0042183	formate catabolic process	1	1	0.05	0.04824
+GO:0019307	mannose biosynthetic process	1	1	0.05	0.04824
+GO:0034477	U6 snRNA 3'-end processing	1	1	0.05	0.04824
+GO:0044539	long-chain fatty acid import into cell	1	1	0.05	0.04824
+GO:0009439	cyanate metabolic process	1	1	0.05	0.04824
+GO:0019478	D-amino acid catabolic process	1	1	0.05	0.04824
+GO:0016095	polyprenol catabolic process	1	1	0.05	0.04824
+GO:0070370	cellular heat acclimation	1	1	0.05	0.04824
+GO:0009972	cytidine deamination	1	1	0.05	0.04824
+GO:1901856	negative regulation of cellular respirat...	1	1	0.05	0.04824
+GO:1990414	replication-born double-strand break rep...	1	1	0.05	0.04824
+GO:0006190	inosine salvage	1	1	0.05	0.04824
+GO:0071590	nicotinamide riboside biosynthetic proce...	1	1	0.05	0.04824
+GO:0071592	nicotinic acid riboside biosynthetic pro...	1	1	0.05	0.04824
+GO:0009691	cytokinin biosynthetic process	1	1	0.05	0.04824
+GO:1903424	fluoride transmembrane transport	1	1	0.05	0.04824
+GO:0006183	GTP biosynthetic process	1	1	0.05	0.04824
+GO:0035719	tRNA import into nucleus	1	1	0.05	0.04824
+GO:0034276	kynurenic acid biosynthetic process	1	1	0.05	0.04824
+GO:0009204	deoxyribonucleoside triphosphate catabol...	1	1	0.05	0.04824
+GO:0034396	negative regulation of transcription fro...	1	1	0.05	0.04824

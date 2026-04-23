@@ -1,0 +1,24 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0005506	iron ion binding	202	51	21.11	3.3e-09
+GO:0004497	monooxygenase activity	184	49	19.23	1.8e-08
+GO:0020037	heme binding	182	42	19.02	5.1e-07
+GO:0009055	electron transfer activity	206	45	21.53	1.0e-06
+GO:0016705	oxidoreductase activity, acting on paire...	198	47	20.69	1.5e-06
+GO:0022857	transmembrane transporter activity	596	92	62.29	2.8e-06
+GO:0016491	oxidoreductase activity	982	158	102.64	0.00062
+GO:0035673	oligopeptide transmembrane transporter a...	12	6	1.25	0.00068
+GO:0000293	ferric-chelate reductase activity	12	6	1.25	0.00068
+GO:0071949	FAD binding	77	18	8.05	0.00078
+GO:0016787	hydrolase activity	1442	146	150.71	0.00166
+GO:0005375	copper ion transmembrane transporter act...	7	4	0.73	0.00320
+GO:0008171	O-methyltransferase activity	25	8	2.61	0.00553
+GO:0008531	riboflavin kinase activity	2	2	0.21	0.01091
+GO:0015204	urea transmembrane transporter activity	2	2	0.21	0.01091
+GO:0000981	DNA-binding transcription factor activit...	189	30	19.75	0.01284
+GO:0050525	cutinase activity	10	4	1.05	0.01486
+GO:0008762	UDP-N-acetylmuramate dehydrogenase activ...	39	9	4.08	0.01699
+GO:0019120	hydrolase activity, acting on acid halid...	3	2	0.31	0.03046
+GO:0030600	feruloyl esterase activity	13	4	1.36	0.03928
+GO:0030151	molybdenum ion binding	8	3	0.84	0.04265
+GO:0010333	terpene synthase activity	8	3	0.84	0.04265
+GO:0016740	transferase activity	994	91	103.89	0.04913

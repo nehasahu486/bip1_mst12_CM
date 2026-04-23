@@ -1,0 +1,42 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0003746	translation elongation factor activity	17	5	0.33	1.3e-05
+GO:0002161	aminoacyl-tRNA editing activity	7	4	0.13	0.00013
+GO:0005200	structural constituent of cytoskeleton	6	3	0.12	0.00014
+GO:0004826	phenylalanine-tRNA ligase activity	3	2	0.06	0.00109
+GO:0000049	tRNA binding	20	3	0.39	0.00631
+GO:0003924	GTPase activity	91	6	1.75	0.00814
+GO:0051499	D-aminoacyl-tRNA deacylase activity	1	1	0.02	0.01928
+GO:0047938	glucose-6-phosphate 1-epimerase activity	1	1	0.02	0.01928
+GO:0004414	homoserine O-acetyltransferase activity	1	1	0.02	0.01928
+GO:1904408	melatonin binding	1	1	0.02	0.01928
+GO:0004107	chorismate synthase activity	1	1	0.02	0.01928
+GO:0004337	geranyltranstransferase activity	1	1	0.02	0.01928
+GO:0016040	glutamate synthase (NADH) activity	1	1	0.02	0.01928
+GO:0008453	alanine-glyoxylate transaminase activity	1	1	0.02	0.01928
+GO:0003959	NADPH dehydrogenase activity	1	1	0.02	0.01928
+GO:0052856	NADHX epimerase activity	1	1	0.02	0.01928
+GO:0052857	NADPHX epimerase activity	1	1	0.02	0.01928
+GO:0003977	UDP-N-acetylglucosamine diphosphorylase ...	1	1	0.02	0.01928
+GO:0008444	CDP-diacylglycerol-glycerol-3-phosphate ...	1	1	0.02	0.01928
+GO:0070004	cysteine-type exopeptidase activity	1	1	0.02	0.01928
+GO:0004634	phosphopyruvate hydratase activity	1	1	0.02	0.01928
+GO:0004161	dimethylallyltranstransferase activity	1	1	0.02	0.01928
+GO:0050483	IMP 5'-nucleotidase activity	1	1	0.02	0.01928
+GO:0017089	glycolipid transfer activity	1	1	0.02	0.01928
+GO:0004819	glutamine-tRNA ligase activity	1	1	0.02	0.01928
+GO:0051861	glycolipid binding	1	1	0.02	0.01928
+GO:0004832	valine-tRNA ligase activity	1	1	0.02	0.01928
+GO:0004360	glutamine-fructose-6-phosphate transamin...	1	1	0.02	0.01928
+GO:0008569	minus-end-directed microtubule motor act...	1	1	0.02	0.01928
+GO:0003852	2-isopropylmalate synthase activity	1	1	0.02	0.01928
+GO:0036381	pyridoxal 5'-phosphate synthase (glutami...	1	1	0.02	0.01928
+GO:0004801	transaldolase activity	1	1	0.02	0.01928
+GO:0000155	phosphorelay sensor kinase activity	13	2	0.25	0.02507
+GO:0010181	FMN binding	34	3	0.66	0.02722
+GO:0005525	GTP binding	125	6	2.41	0.03369
+GO:0008526	phosphatidylinositol transfer activity	2	1	0.04	0.03819
+GO:0051538	3 iron, 4 sulfur cluster binding	2	1	0.04	0.03819
+GO:0008379	thioredoxin peroxidase activity	2	1	0.04	0.03819
+GO:0004631	phosphomevalonate kinase activity	2	1	0.04	0.03819
+GO:0004825	methionine-tRNA ligase activity	2	1	0.04	0.03819
+GO:0004818	glutamate-tRNA ligase activity	2	1	0.04	0.03819

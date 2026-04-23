@@ -1,0 +1,6 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0016020	membrane	2511	185	148.16	8e-08
+GO:0005576	extracellular region	184	24	10.86	0.0025
+GO:0005615	extracellular space	12	4	0.71	0.0041
+GO:0019028	viral capsid	3	2	0.18	0.0100
+GO:0000786	nucleosome	10	3	0.59	0.0179

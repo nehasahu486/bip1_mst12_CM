@@ -1,0 +1,15 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0055085	transmembrane transport	606	66	46.39	1.4e-05
+GO:0030245	cellulose catabolic process	22	7	1.68	0.00092
+GO:0009103	lipopolysaccharide biosynthetic process	8	4	0.61	0.00185
+GO:0008152	metabolic process	3931	288	300.9	0.00225
+GO:0019343	cysteine biosynthetic process via cystat...	2	2	0.15	0.00585
+GO:1901106	tetracenomycin C biosynthetic process	2	2	0.15	0.00585
+GO:0008643	carbohydrate transport	34	7	2.6	0.01297
+GO:0006801	superoxide metabolic process	8	3	0.61	0.01663
+GO:0000105	histidine biosynthetic process	8	3	0.61	0.01867
+GO:0043386	mycotoxin biosynthetic process	16	4	1.22	0.02949
+GO:0017000	antibiotic biosynthetic process	4	2	0.31	0.03163
+GO:0051083	'de novo' cotranslational protein foldin...	4	2	0.31	0.03163
+GO:0006535	cysteine biosynthetic process from serin...	4	2	0.31	0.03163
+GO:0070814	hydrogen sulfide biosynthetic process	7	3	0.54	0.04995

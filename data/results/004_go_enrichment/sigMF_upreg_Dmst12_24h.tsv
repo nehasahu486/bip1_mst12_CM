@@ -1,0 +1,20 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0004499	N,N-dimethylaniline monooxygenase activi...	14	6	1.25	0.00079
+GO:0022857	transmembrane transporter activity	596	72	53.13	0.00087
+GO:0005375	copper ion transmembrane transporter act...	7	4	0.62	0.00176
+GO:0004497	monooxygenase activity	184	33	16.4	0.00729
+GO:0003865	3-oxo-5-alpha-steroid 4-dehydrogenase ac...	2	2	0.18	0.00794
+GO:0005506	iron ion binding	202	30	18.01	0.00974
+GO:0004190	aspartic-type endopeptidase activity	28	7	2.5	0.00976
+GO:0035673	oligopeptide transmembrane transporter a...	12	4	1.07	0.01734
+GO:0016805	dipeptidase activity	6	3	0.53	0.02236
+GO:0019120	hydrolase activity, acting on acid halid...	3	2	0.27	0.02240
+GO:0070773	protein-N-terminal glutamine amidohydrol...	3	2	0.27	0.02240
+GO:0008418	protein-N-terminal asparagine amidohydro...	3	2	0.27	0.02240
+GO:0050614	delta24-sterol reductase activity	3	2	0.27	0.02240
+GO:0050660	flavin adenine dinucleotide binding	166	26	14.8	0.02402
+GO:0008061	chitin binding	34	7	3.03	0.02783
+GO:0016787	hydrolase activity	1442	116	128.54	0.03673
+GO:0000981	DNA-binding transcription factor activit...	189	25	16.85	0.03877
+GO:0071949	FAD binding	77	12	6.86	0.03892
+GO:0003854	3-beta-hydroxy-delta5-steroid dehydrogen...	4	2	0.36	0.04216

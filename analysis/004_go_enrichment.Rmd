@@ -1,0 +1,324 @@
+---
+title: "GO Enrichment Analysis of DEGs in Dbip1 and Dmst12 Mutants"
+author: "Neha Sahu"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  github_document:
+    toc: true
+    toc_depth: 3
+    dev: "png"
+    html_preview: false
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    highlight: pygments
+    code_folding: show
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+library(here)
+source(here("scripts","analysis_config.R"))
+init_analysis("004_go_enrichment")
+
+knitr::opts_chunk$set(
+  fig.path="../data/results/004_go_enrichment/00_figures/"
+)
+```
+
+# **Introduction**
+
+This analysis continues from 002_rna_seq.html and
+003_co_expression.html.
+
+This analysis performs Gene Ontology (GO) enrichment analysis on
+differentially expressed genes (DEGs) identified in the RNA-seq
+comparison between Guy11 wild-type and mutant strains (Dbip1, Dmst12)
+across different timepoints (0h, 4h, and 24h). The goal is to identify
+biological processes, molecular functions, and cellular components that
+are significantly enriched in upregulated and downregulated gene sets
+and figgify them.
+
+## Objectives:
+
+-   Perform GO enrichment analysis for Biological Process (BP),
+    Molecular Function (MF), and Cellular Component (CC) ontologies
+-   Compare enriched terms between different mutant strains and
+    timepoints
+-   Visualize enrichment result
+-   Generate summary tables of significantly enriched GO terms
+
+## Load Libraries
+
+```{r load_lib, message=F, warning=F}
+library(tidyverse)
+library(topGO) # for go enrichment
+```
+
+# **Data Preparation**
+
+### Merged DEGs File
+
+```{r merge_degs, message=F, warning=F}
+merged_data <- read_csv(here("data/results/002_rna_seq/merged_DEGs_guy11_vs_Dbip1_Dmst12.csv"))
+
+degs_filt <- merged_data %>%
+  dplyr::select(target_id,Comparison,DEG_status) %>%
+  filter(DEG_status!="Not_DEG") %>%
+  mutate(time=word(Comparison,sep="_",4,4),
+         sample=word(Comparison,sep="_",3,3),
+         target_id=sub("T[0-9]$", "", target_id),
+         DEG_status=sub("_in_guy11","",DEG_status),
+         category=paste0(DEG_status,"_",sample,"_",time)) %>%
+  dplyr::select(target_id,category) %>%
+  distinct()
+```
+
+### GOs Gene Universe File
+
+```{r go_univ, message=F, warning=F, eval=F}
+go_univ <- read_tsv(here("data/raw/000_published_and_db_sources/", "MG8_biomart.txt")) %>%
+  dplyr::select("Gene stable ID", "GO term accession") %>%
+  distinct() %>%
+  na.omit() %>%
+  setNames(c("ProtID", "GO_ID")) %>%
+  group_by(ProtID) %>%
+  summarise(GO_ID = toString(GO_ID), .groups = 'drop') %>%
+  write.table(here("data/processed/go_univ.tsv"),sep="\t",row.names = F, quote=F)
+
+geneID2GO <- readMappings(file=here("data/processed/go_univ.tsv")) ##gene_universe file contains two columns, one is for target_ids and other is for comma separated GO terms belonging to that target_id
+head(geneID2GO)
+geneUniverse <- names(geneID2GO)
+```
+
+### GO Enrichment - Biological Process
+
+```{r go_bp, warning=F, eval=F}
+# Extract unique category names
+unique_classes <- unique(degs_filt$category)
+
+# Loop through each unique class and perform the analysis
+for (class_name in unique_classes) {
+  # Subset data for the current class
+  class_data <- degs_filt[degs_filt$category == class_name, "target_id"]
+  
+  # Create a named vector
+  geneList <- factor(as.integer(geneUniverse %in% class_data$target_id))
+  names(geneList) <- geneUniverse
+  
+  # Perform your topGO analysis here
+  myGOdata <- new("topGOdata", description="My project", ontology="BP", allGenes=geneList,  annot = annFUN.gene2GO, gene2GO = geneID2GO)
+  sg <- sigGenes(myGOdata)
+  str(sg)
+  numSigGenes(myGOdata)
+  resultTopgo <- runTest(myGOdata, algorithm="weight01", statistic="fisher")
+  mysummary <- summary(attributes(resultTopgo)$score <= 0.05)
+  mysummary
+  numsignif <- as.integer(mysummary[[3]])
+  sigRes <- GenTable(myGOdata, topgoFisher = resultTopgo, orderBy = "topgoFisher", ranksOf = "classicFisher", topNodes = numsignif)
+  sigRes
+    # create the file name
+  save_data(sigRes, paste0("sigBP_", class_name), format = "tsv")
+}
+
+```
+
+### GO Enrichment - Molecular Function
+
+```{r go_mf, warning=F, eval=F}
+# Extract unique category names
+unique_classes <- unique(degs_filt$category)
+
+# Loop through each unique class and perform the analysis
+for (class_name in unique_classes) {
+  # Subset data for the current class
+  class_data <- degs_filt[degs_filt$category == class_name, "target_id"]
+  
+  # Create a named vector
+  geneList <- factor(as.integer(geneUniverse %in% class_data$target_id))
+  names(geneList) <- geneUniverse
+  
+  # Perform your topGO analysis here
+  myGOdata <- new("topGOdata", description="My project", ontology="MF", allGenes=geneList,  annot = annFUN.gene2GO, gene2GO = geneID2GO)
+  sg <- sigGenes(myGOdata)
+  str(sg)
+  numSigGenes(myGOdata)
+  resultTopgo <- runTest(myGOdata, algorithm="weight01", statistic="fisher")
+  mysummary <- summary(attributes(resultTopgo)$score <= 0.05)
+  mysummary
+  numsignif <- as.integer(mysummary[[3]])
+  sigRes <- GenTable(myGOdata, topgoFisher = resultTopgo, orderBy = "topgoFisher", ranksOf = "classicFisher", topNodes = numsignif)
+  sigRes
+    # create the file name
+  save_data(sigRes, paste0("sigMF_", class_name), format = "tsv")
+}
+
+```
+
+### GO Enrichment - Cellular Component
+
+```{r go_cc, warning=F, eval=F}
+# Extract unique category names
+unique_classes <- unique(degs_filt$category)
+
+# Loop through each unique class and perform the analysis
+for (class_name in unique_classes) {
+  # Subset data for the current class
+  class_data <- degs_filt[degs_filt$category == class_name, "target_id"]
+  
+  # Create a named vector
+  geneList <- factor(as.integer(geneUniverse %in% class_data$target_id))
+  names(geneList) <- geneUniverse
+  
+  # Perform your topGO analysis here
+  myGOdata <- new("topGOdata", description="My project", ontology="CC", allGenes=geneList,  annot = annFUN.gene2GO, gene2GO = geneID2GO)
+  sg <- sigGenes(myGOdata)
+  str(sg)
+  numSigGenes(myGOdata)
+  resultTopgo <- runTest(myGOdata, algorithm="weight01", statistic="fisher")
+  mysummary <- summary(attributes(resultTopgo)$score <= 0.05)
+  mysummary
+  numsignif <- as.integer(mysummary[[3]])
+  sigRes <- GenTable(myGOdata, topgoFisher = resultTopgo, orderBy = "topgoFisher", ranksOf = "classicFisher", topNodes = numsignif)
+  sigRes
+    # create the file name
+  save_data(sigRes, paste0("sigCC_", class_name), format = "tsv")
+}
+
+```
+
+# **Visualization of GO enrichment**
+
+### Merge GO Enrichment Results
+
+```{r merge-go_results, message=F, warning=F}
+file_names <- list.files(path = here("data/results/004_go_enrichment/"), pattern = "sig")
+file_names
+sig_data <- map_dfr(file_names, ~ {
+  data <- read_tsv(here("data/results/004_go_enrichment/", .x))
+  data$topgoFisher <- as.character(data$topgoFisher)
+  data$filename <- basename(.x)
+  return(data)
+}) %>%
+   mutate(
+  GO_cat = gsub("sig", "", word(filename, 1, 1, sep = "_")),
+  filename = gsub(".tsv", "", word(filename, 2, 4, sep = "_")))
+save_data(sig_data, "go_enrichment_results",format = "tsv")
+unique(sig_data$GO_cat)
+```
+
+### File for Plotting only Dbip1 and Dmst12
+
+```{r plot-go_results, message=F, warning=F}
+order <- c("0h","4h","24h")
+sig_data_fin<- sig_data %>%
+  mutate(sample=word(filename,sep="_",2,2),
+         time=word(filename,sep="_",3,3),
+         reg=word(filename,sep="_",1,1)) %>%
+  filter(sample!="tbip1") %>%
+  group_by(GO.ID,reg,time) %>%
+  mutate(facet_label = ifelse(n_distinct(filename) == 1, "Specific", "Common"),
+         tot_count = as.numeric(n())) %>%
+  ungroup() %>%
+  mutate(topgoFisher=as.numeric(topgoFisher))
+
+sig_data_fin$time <- factor(sig_data_fin$time, levels = order)
+sapply(sig_data_fin,class)
+head(sig_data_fin)
+unique(sig_data_fin$filename)
+```
+
+### Plot - Downregulated in Guy11 - Common in Dbip1 and Dmst12
+
+```{r plot_down_in_guy11_common, message=F, warning=F, fig.align='center',fig.width=18,fig.height=20}
+sig_data_fin %>%
+         filter(reg=="downreg",
+                facet_label=="Common") %>%
+  ggplot(aes(x = sample, 
+        y = fct_reorder(Term, -tot_count))) +
+  ggtitle("Downregulated in Guy11") +
+  geom_point(aes(color = topgoFisher, size=Significant)) +
+  facet_wrap(~ time, scales = "free") +
+  scale_color_gradient2("p-value", low = "red", mid = "pink", high = "blue", midpoint = 0.025) +
+  theme_bw(base_size = 16) +
+  xlab("") + ylab("") +
+  theme(legend.text = element_text(size = 16), 
+       axis.text.y = element_text(color = "black"),
+         axis.text.x = element_text(color = "black", size = 16,angle=45,vjust=0.5),
+        strip.text = element_text(size = 16, face = "bold"), 
+        strip.background = element_blank()) +
+  xlab("Significant GO terms in downregs in Guy11")
+```
+
+### Plot - Upregulated in Guy11 - Common in Dbip1 and Dmst12
+
+```{r plot_up_in_guy11_common, message=F, warning=F, fig.align='center',fig.width=18,fig.height=20}
+sig_data_fin %>%
+         filter(reg=="upreg",
+                facet_label=="Common") %>%
+  ggplot(aes(x = sample, 
+        y = fct_reorder(Term, -tot_count))) +
+  ggtitle("Upregulated in Guy11") +
+  geom_point(aes(color = topgoFisher, size=Significant)) +
+  facet_wrap(~ time, scales = "free") +
+  scale_color_gradient2("p-value", low = "red", mid = "pink", high = "blue", midpoint = 0.025) +
+  theme_bw(base_size = 16) +
+  xlab("") + ylab("") +
+  theme(legend.text = element_text(size = 16), 
+       axis.text.y = element_text(color = "black"),
+         axis.text.x = element_text(color = "black", size = 16,angle=45,vjust=0.5),
+        strip.text = element_text(size = 16, face = "bold"), 
+        strip.background = element_blank()) +
+  xlab("Significant GO terms in Upregs in Guy11 ") + ylab("")
+```
+
+### Plot - Downregulated in Guy11 - Specific in Dbip1 and Dmst12
+
+```{r plot_down_in_guy11_specific, message=F, warning=F, fig.align='center',fig.width=18,fig.height=20}
+sig_data_fin %>%
+         filter(reg=="downreg",
+                facet_label=="Specific") %>%
+  ggplot(aes(x = sample, 
+        y = fct_reorder(Term, -tot_count))) +
+  ggtitle("Downregulated in Guy11") +
+  geom_point(aes(color = topgoFisher, size=Significant)) +
+  facet_wrap(~ time, scales = "free") +
+  scale_color_gradient2("p-value", low = "red", mid = "pink", high = "blue", midpoint = 0.025) +
+    theme_bw(base_size = 16) +
+  xlab("") + ylab("") +
+  theme(legend.text = element_text(size = 16), 
+       axis.text.y = element_text(color = "black"),
+         axis.text.x = element_text(color = "black", size = 16,angle=45,vjust=0.5),
+        strip.text = element_text(size = 16, face = "bold"), 
+        strip.background = element_blank()) +
+  xlab("Significant GO terms in Downregs in Guy11")
+```
+
+### Plot - Upregulated in Guy11 - Specific in Dbip1 and Dmst12
+
+```{r specific_up_in_guy11_specific, message=F, warning=F, fig.align='center',fig.width=18,fig.height=20}
+sig_data_fin %>%
+         filter(reg=="upreg",
+                facet_label=="Specific") %>%
+  ggplot(aes(x = sample, 
+        y = fct_reorder(Term, -tot_count))) +
+  ggtitle("Upregulated in Guy11") +
+  geom_point(aes(color = topgoFisher, size=Significant)) +
+  facet_wrap(~ time, scales = "free") +
+  scale_color_gradient2("p-value", low = "red", mid = "pink", high = "blue", midpoint = 0.025) +
+    theme_bw(base_size = 16) +
+  xlab("") + ylab("") +
+  theme(legend.text = element_text(size = 16), 
+       axis.text.y = element_text(color = "black"),
+         axis.text.x = element_text(color = "black", size = 16,angle=45,vjust=0.5),
+        strip.text = element_text(size = 16, face = "bold"), 
+        strip.background = element_blank()) +
+  xlab("Significant GO terms in Upregs in Guy11") + ylab("")
+```
+
+```{r}
+sessionInfo()
+```

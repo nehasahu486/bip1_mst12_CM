@@ -1,0 +1,13 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0006878	intracellular copper ion homeostasis	11	6	0.9	9.7e-05
+GO:0006508	proteolysis	341	37	28.03	0.0011
+GO:0035434	copper ion transmembrane transport	8	4	0.66	0.0024
+GO:0055085	transmembrane transport	606	76	49.82	0.0045
+GO:0008295	spermidine biosynthetic process	2	2	0.16	0.0067
+GO:0006694	steroid biosynthetic process	28	5	2.3	0.0091
+GO:0008152	metabolic process	3931	289	323.15	0.0094
+GO:0035672	oligopeptide transmembrane transport	13	4	1.07	0.0177
+GO:0019408	dolichol biosynthetic process	3	2	0.25	0.0191
+GO:0006357	regulation of transcription by RNA polym...	282	31	23.18	0.0327
+GO:0015680	protein maturation by copper ion transfe...	4	2	0.33	0.0362
+GO:0071805	potassium ion transmembrane transport	10	3	0.82	0.0429

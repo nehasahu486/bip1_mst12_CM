@@ -1,0 +1,17 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0005975	carbohydrate metabolic process	404	61	37.74	5.1e-05
+GO:0030001	metal ion transport	101	19	9.43	0.0046
+GO:0120029	proton export across plasma membrane	2	2	0.19	0.0087
+GO:0031142	induction of conjugation upon nitrogen s...	2	2	0.19	0.0087
+GO:0006044	N-acetylglucosamine metabolic process	2	2	0.19	0.0087
+GO:0019290	siderophore biosynthetic process	2	2	0.19	0.0087
+GO:0006559	L-phenylalanine catabolic process	6	3	0.56	0.0131
+GO:0006508	proteolysis	341	33	31.85	0.0136
+GO:0006878	intracellular copper ion homeostasis	11	4	1.03	0.0146
+GO:0008152	metabolic process	3931	357	367.17	0.0155
+GO:0035672	oligopeptide transmembrane transport	13	4	1.21	0.0272
+GO:0044550	secondary metabolite biosynthetic proces...	53	15	4.95	0.0398
+GO:0055085	transmembrane transport	606	77	56.6	0.0412
+GO:0006116	NADH oxidation	4	2	0.37	0.0460
+GO:0000272	polysaccharide catabolic process	102	16	9.53	0.0476
+GO:0030245	cellulose catabolic process	22	5	2.05	0.0484

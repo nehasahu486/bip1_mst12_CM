@@ -1,0 +1,681 @@
+---
+title: "RNASeq analysis for Guy11 and Dbip1 and Dmst12"
+author: "Neha Sahu"
+date: "`r format(Sys.time(),'%d %B,%Y')`"
+output:
+  github_document:
+    toc: true
+    toc_depth: 3
+    dev: "png"
+    html_preview: false
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    highlight: pygments
+    code_folding: show
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup,include=FALSE}
+library(here)
+source(here("scripts", "analysis_config.R"))
+init_analysis("002_rna_seq")
+
+
+knitr::opts_chunk$set(
+  fig.path="../data/results/002_rna_seq/00_figures/"
+)
+```
+
+# Description
+
+Lab notes for RNA-Seq data analysis and differential gene expression in *Magnaporthe oryzae* wild-type (Guy11) compared to null mutant strains (Dbip1 and Dmst12) across a time-course experiment. The analysis identifies differentially expressed genes at multiple timepoints (0h, 4h,and 24h),visualizes results through volcano plots,and identifies key genes with altered expression in mutant backgrounds.
+
+## GoHREP
+
+**Goal:**
+
+To identify genes differentially regulated in M. oryzae null mutant strains (Dbip1,Dmst12) compared to wild-type Guy11 across multiple timepoints to understand processes regulated by these genes during fungal development and potential infection processes.
+
+**Hypothesis:**\
+*Camilla* has a hypothesis that bip1 and mst12 are co-regulated. By checking the gene regulation in deletion mutants of bip1 and mst12 at different timepoints,we can see if that's the case or not.
+
+**Rationale:**\
+Understanding how key regulatory genes influence global gene expression patterns can reveal their functional roles and regulatory networks. By comparing transcriptional profiles of wild-type and mutant strains across different timepoints,we can identify genes and pathways specifically regulated by bip1,mst12.
+
+**Experimental plan:**
+
+Analyze RNA-seq data from wild-type Guy11 and null mutant strains (Dbip1,Dmst12) at three timepoints (0h,4h,and 24h)
+
+-   Perform quality control of RNA-seq data using FastQC/MultiQC to assess sequencing quality metrics
+
+-   Process raw reads with Trimmomatic to remove adapters and low-quality sequences
+
+-   Map processed reads to the *M. oryzae* reference transcriptome using Kallisto for transcript quantification
+
+-   Identify differentially expressed genes (DEGs) using edgeR,with thresholds of \|log2FC\| ≥ 1 and adjusted p-value ≤ 0.05
+
+-   Visualize differential expression through volcano plots, highlighting the top 10 or 15 most significantly up- and down-regulated genes
+
+## RNA Samples
+
+| Strain         | 0h       | 4h       | 24h      |
+|----------------|----------|----------|----------|
+| **Guy11 (WT)** | R2,R5,R6 | R1,R2,R3 | R1,R2,R3 |
+| **Dbip1**      | R1,R2,R3 | R1,R2,R3 | R1,R2,R3 |
+| **Dmst12**     | R1,R2,R3 | R1,R2,R3 | R1,R2,R3 |
+
+## Quality control
+
+**- FastQC and MultiQC with raw files**
+
+The raw fastq files from Novogene are located on the HPC (saved by Camilla). FastQC and MultiQC can be sourced from `scripts/002_rna_seq/001_fastqc_multiqc.sh`
+
+**- Trimmomatic to remove adapters**
+
+The QC shows that the fastq files has adapters that need to be trimmed. I used trimmomatic to trim the adapter regions and low quality sequences. Script used can be sourced from `scripts/002_rna_seq/002_trim.sh`. The trimmed read files were again processed though FastQC/MultiQC to confirm the results. Script is located at `scripts/002_rna_seq/003_trimmed_fastqc_multiqc.sh`
+
+QC of all the samples look good - per sequence and mean quality score are in the green region (\>=35) and GC distribution shows a nice bell shape - proceed with read mapping.
+
+## Read Mapping
+
+**- Kallisto (pseudoalignment)**
+
+**Kallisto** is a program for quantifying abundances of transcripts from bulk and single-cell RNA-Seq data,or more generally of target sequences using high-throughput sequencing reads.
+
+**NOTE: Kallisto can ONLY use transcripts file (cDNA) and not the whole genome fasta.** Source: <https://pachterlab.github.io/kallisto/about>. The script used to run Kallisto can be sourced from `scripts/002_rna_seq/004_fungal_kallisto_trimmed.sh`
+
+# **Differentially Expressed Genes (DEGs)**
+
+## Load Libraries
+
+```{r load_lib,message=F,warning=F}
+library(tidyverse)
+library(edgeR)
+library(limma)
+library(ggrepel)
+```
+
+## Load Kallisto Results
+
+Specify where the kallisto results are stored and create a read counts file: tpm table - non log transformed and no addition of any values (eg. 0.05) to avoid DIV0
+
+```{r load_kallisto}
+dirs <- list.dirs(here("data/interim/", "kallisto_output_fungal"),full.names=TRUE,recursive=FALSE)
+
+# Initialize an empty list to store data frames
+est_counts_list <- list()
+
+# Loop through each directory and read the abundance.tsv file
+for (dir in dirs) {
+  file_path <- file.path(dir,"abundance.tsv")
+  if (file.exists(file_path)) {
+    sample_name <- basename(dir)  # Use directory name as sample name
+    est_counts_data <- read.delim(file_path,stringsAsFactors=FALSE)
+    
+    # Extract the est_counts values and transcript/gene names
+    est_counts_data <- est_counts_data %>%
+      select(target_id,est_counts) %>%
+      dplyr::rename(!!sample_name := est_counts)  # dplyr::rename the est_counts column with the sample name
+    
+    est_counts_list[[sample_name]] <- est_counts_data
+  }
+}
+
+# Merge all data frames by 'target_id' (gene or transcript name)
+est_counts_table <- Reduce(function(x,y) merge(x,y,by="target_id",all=TRUE),est_counts_list)
+
+# Create a TPM table for further use
+tpm <- est_counts_table %>%
+  pivot_longer(-target_id,names_to="sample",values_to="value") %>%
+  mutate(sample_group=gsub("_R[0-9]+$", "",sample)) %>%
+  group_by(target_id,sample_group) %>%
+  summarise(avg_value=mean(value,na.rm=TRUE),.groups="drop") %>%
+  pivot_wider(names_from=sample_group,values_from=avg_value)
+#save TPM table
+save_data(tpm,"TPM_table",format="csv")
+
+# Remove lowly expressed genes - here I removed genes that do not have any read count in less than or atleast 3 samples.. also the sum of max reads should exceed 5
+counts <- est_counts_table %>%
+  column_to_rownames(var="target_id") %>%  # Convert the target_id column into row names
+  mutate(
+    max=max(across(everything()),na.rm=TRUE), # Calculate the max for each row
+    count_gt_zero=rowSums(across(everything()) > 0)  # Count the number of samples with values > 0
+  ) %>%
+  filter(count_gt_zero > 3 & max > 5) %>%  # Filter for rows with at least 3 samples > 0 and sum > 3
+  select(-max,-count_gt_zero)  # Remove temporary columns
+
+
+length(est_counts_table$Guy11_0h_R2) #total genes
+length(counts$Guy11_0h_R2) # after removing lowly expressed genes
+
+```
+
+## DEG calculations
+
+```{r load_deg_calc,fig.align='center',fig.width=10,fig.height=7,warning=F}
+dge <- DGEList(counts)
+dge <- calcNormFactors(dge) # perform scale normalization,adjusting for differences
+colnames(counts)
+
+#group as replicates together
+group=c(rep("Dbip1_0h",3),rep("Dbip1_24h",3),rep("Dbip1_4h",3),
+        rep("Dmst12_0h",3),rep("Dmst12_24h",3),rep("Dmst12_4h",3),
+        rep("Guy11_0h",3),rep("Guy11_24h",3),rep("Guy11_4h",3))
+design=model.matrix(~0+group)
+colnames(design)=gsub("", "",colnames(design))
+colnames(design)
+
+v=voom(dge,design,plot=TRUE,normalize.method="none")
+
+#MDS plot
+cols<-c(rep("#fdc086",3),rep("#fdc096",3),rep("#fdc016",3),
+        rep("#beaed4",3),rep("#beaed9",3),rep("#beaed0",3),
+        rep("#7fc97f",3),rep("#7fc17a",3),rep("#7fc95f",3)) 
+
+plotMDS(v,labels=colnames(v),main="min5readcounts_and_atleast3samples",cex=1,col=cols)
+
+
+fit<-lmFit(v,design) # fits row-wise linear models (this will need the voom output file and the design matrix)
+colnames(design)
+#define comparisons as contrast matrices
+contrast.matrix= makeContrasts(groupGuy11_0h-groupDbip1_0h,#1
+                               groupGuy11_0h - groupDmst12_0h,#2
+                               groupGuy11_4h - groupDbip1_4h ,#3
+                               groupGuy11_4h - groupDmst12_4h ,#4
+                               groupGuy11_24h - groupDbip1_24h,#5
+                               groupGuy11_24h - groupDmst12_24h,#6
+                               levels=design) # more comparisons can be provided here,based on the design
+fit2= contrasts.fit(fit,contrast.matrix)
+fit2= eBayes(fit2) # empirical Bayes statistics for differential expression
+```
+
+# **0h**
+
+## For 0h guy11_vs_Dbip1
+
+```{r 0h_guy11_vs_Dbip1,fig.align='center',fig.width=10,fig.height=7,warning=F}
+# see contrast matrix. in the example,coef=1 means first comparison (group1-group2 above)
+complete_table=topTable(fit2,coef=1,number=nrow(v)) #make sure to change "coeff" is changed each time for each comparison
+guy11_vs_Dbip1_0h <- complete_table %>%
+  mutate(target_id=paste0(rownames(complete_table)),
+         DEG_status=case_when(
+    logFC >= 1 & adj.P.Val <= 0.05 ~ "upreg_in_guy11",
+    logFC <= -1 & adj.P.Val <= 0.05 ~ "downreg_in_guy11",
+    TRUE ~ "Not_DEG"))
+table(guy11_vs_Dbip1_0h$DEG_status)
+
+#save DEGs
+save_data(guy11_vs_Dbip1_0h,"guy11_vs_Dbip1_0h",format="tsv")
+
+#volcano plot
+comp_table<- complete_table %>%
+   mutate(GeneID=paste0(rownames(complete_table)))
+volcano_data <- comp_table %>%
+  mutate(
+    significance=case_when(
+      logFC >= 1 & adj.P.Val <= 0.05  ~ "Upreg in Guy11",
+      logFC <= -1 & adj.P.Val <= 0.05 ~ "Upreg in Dbip1",
+      TRUE ~ "NS"
+    ),
+    GeneID=gsub("T[0-9]", "",GeneID)
+  )
+
+
+top10_up <- volcano_data %>%
+  filter(significance == "Upreg in Guy11") %>%
+  slice_min(order_by=-logFC,n=10)
+
+top10_down <- volcano_data %>%
+  filter(significance == "Upreg in Dbip1") %>%
+  slice_min(order_by=logFC,n=10)
+
+top_genes <- bind_rows(top10_up,top10_down)
+
+volcano_data <- volcano_data %>%
+  mutate(label=ifelse(GeneID %in% top_genes$GeneID,as.character(GeneID),NA))
+
+ggplot(volcano_data,aes(x=logFC,y=-log10(adj.P.Val))) +
+  geom_point(aes(color=significance,alpha=0.5),shape=1,size=1) +
+  geom_vline(xintercept=c(-1,1),linetype="dashed",color="red") +
+  geom_hline(yintercept=-log10(0.05),linetype="dashed",color="red") +
+  scale_color_manual(values=c("Upreg in Guy11"="#7fc97f", "Upreg in Dbip1"="#fdc086", "NS"="grey80")) +
+  geom_text_repel(aes(label=label,color=significance),
+                  size=5,
+                  #box.padding=0.5,
+                  max.overlaps= 10) + 
+  labs(title="guy11_vs_Dbip1_0h",
+    x="Log2 Fold Change",
+    y="-Log10 Adjusted P-Value",
+    color="Expression") +
+  theme_bw(base_size=14) +   theme(legend.position="bottom") +
+  theme(legend.position="bottom")
+```
+
+## For 0h guy11_vs_Dmst12
+
+```{r 0h_guy11_vs_Dmst12,fig.align='center',fig.width=10,fig.height=7,warning=F}
+# see contrast matrix. in the example,coef=1 means first comparison (group1-group2 above)
+complete_table=topTable(fit2,coef=2,number=nrow(v)) #make sure to change "coeff" is changed each time for each comparison
+
+guy11_vs_Dmst12_0h <- complete_table %>%
+  mutate(target_id=paste0(rownames(complete_table)),
+         DEG_status=case_when(
+    logFC >= 1 & adj.P.Val <= 0.05 ~ "upreg_in_guy11",
+    logFC <= -1 & adj.P.Val <= 0.05 ~ "downreg_in_guy11",
+    TRUE ~ "Not_DEG"))
+
+
+table(guy11_vs_Dmst12_0h$DEG_status)
+
+# save DEGs
+save_data(guy11_vs_Dmst12_0h,"guy11_vs_Dmst12_0h",format="tsv")
+
+# volcano plot
+comp_table<- complete_table %>%
+   mutate(GeneID=paste0(rownames(complete_table)))
+#volcano plot
+comp_table<- complete_table %>%
+   mutate(GeneID=paste0(rownames(complete_table)))
+volcano_data <- comp_table %>%
+  mutate(
+    significance=case_when(
+      logFC >= 1 & adj.P.Val <= 0.05  ~ "Upreg in Guy11",
+      logFC <= -1 & adj.P.Val <= 0.05 ~ "Upreg in Dmst12",
+      TRUE ~ "NS"
+    ),
+    GeneID=gsub("T[0-9]", "",GeneID)
+  )
+
+
+top10_up <- volcano_data %>%
+  filter(significance == "Upreg in Guy11") %>%
+  slice_min(order_by=-logFC,n=10)
+
+top10_down <- volcano_data %>%
+  filter(significance == "Upreg in Dmst12") %>%
+  slice_min(order_by=logFC,n=10)
+
+top_genes <- bind_rows(top10_up,top10_down)
+
+volcano_data <- volcano_data %>%
+  mutate(label=ifelse(GeneID %in% top_genes$GeneID,as.character(GeneID),NA))
+
+ggplot(volcano_data,aes(x=logFC,y=-log10(adj.P.Val))) +
+  geom_point(aes(color=significance,alpha=0.5),shape=1,size=1) +
+  geom_vline(xintercept=c(-1,1),linetype="dashed",color="red") +
+  geom_hline(yintercept=-log10(0.05),linetype="dashed",color="red") +
+  scale_color_manual(values=c("Upreg in Guy11"="#7fc97f", "Upreg in Dmst12"="#beaed4", "NS"="grey80")) +
+  geom_text_repel(aes(label=label,color=significance),
+                  size=5,
+                  #box.padding=0.5,
+                  max.overlaps= 10) + 
+  geom_text_repel(aes(label=label,color=significance),
+                  size=5,
+                  #box.padding=0.5,
+                  max.overlaps= 10) + 
+  labs(title="guy11_vs_Dmst12_0h",
+    x="Log2 Fold Change",
+    y="-Log10 Adjusted P-Value",
+    color="Expression") +
+  theme_bw(base_size=14) +   theme(legend.position="bottom")
+```
+
+# **4h**
+
+## For 4h guy11_vs_Dbip1
+
+```{r 4h_guy11_vs_Dbip1,fig.align='center',fig.width=10,fig.height=7,warning=F}
+# see contrast matrix. in the example,coef=1 means first comparison (group1-group2 above)
+complete_table=topTable(fit2,coef=3,number=nrow(v)) #make sure to change "coeff" is changed each time for each comparison
+guy11_vs_Dbip1_4h <- complete_table %>%
+  mutate(target_id=paste0(rownames(complete_table)),
+         DEG_status=case_when(
+    logFC >= 1 & adj.P.Val <= 0.05 ~ "upreg_in_guy11",
+    logFC <= -1 & adj.P.Val <= 0.05 ~ "downreg_in_guy11",
+    TRUE ~ "Not_DEG"))
+table(guy11_vs_Dbip1_4h$DEG_status)
+
+#save DEGs
+save_data(guy11_vs_Dbip1_4h,"guy11_vs_Dbip1_4h",format="tsv")
+
+#volcano plot
+comp_table<- complete_table %>%
+   mutate(GeneID=paste0(rownames(complete_table)))
+#volcano plot
+comp_table<- complete_table %>%
+   mutate(GeneID=paste0(rownames(complete_table)))
+volcano_data <- comp_table %>%
+  mutate(
+    significance=case_when(
+      logFC >= 1 & adj.P.Val <= 0.05  ~ "Upreg in Guy11",
+      logFC <= -1 & adj.P.Val <= 0.05 ~ "Upreg in Dbip1",
+      TRUE ~ "NS"
+    ),
+    GeneID=gsub("T[0-9]", "",GeneID)
+  )
+
+
+top10_up <- volcano_data %>%
+  filter(significance == "Upreg in Guy11") %>%
+  slice_min(order_by=-logFC,n=10)
+
+top10_down <- volcano_data %>%
+  filter(significance == "Upreg in Dbip1") %>%
+  slice_min(order_by=logFC,n=10)
+
+top_genes <- bind_rows(top10_up,top10_down)
+
+volcano_data <- volcano_data %>%
+  mutate(label=ifelse(GeneID %in% top_genes$GeneID,as.character(GeneID),NA))
+
+ggplot(volcano_data,aes(x=logFC,y=-log10(adj.P.Val))) +
+  geom_point(aes(color=significance,alpha=0.5),shape=1,size=1) +
+  geom_vline(xintercept=c(-1,1),linetype="dashed",color="red") +
+  geom_hline(yintercept=-log10(0.05),linetype="dashed",color="red") +
+  scale_color_manual(values=c("Upreg in Guy11"="#7fc97f", "Upreg in Dbip1"="#fdc086", "NS"="grey80")) +
+  geom_text_repel(aes(label=label,color=significance),
+                  size=5,
+                  #box.padding=0.5,
+                  max.overlaps= 10) + 
+  geom_text_repel(aes(label=label,color=significance),
+                  size=5,
+                  #box.padding=0.5,
+                  max.overlaps= 10) + 
+  labs(title="guy11_vs_Dbip1_4h",
+    x="Log2 Fold Change",
+    y="-Log10 Adjusted P-Value",
+    color="Expression") +
+  theme_bw(base_size=14) +   theme(legend.position="bottom")
+```
+
+## For 4h guy11_vs_Dmst12
+
+```{r 4h_guy11_vs_Dmst12,fig.align='center',fig.width=10,fig.height=7,warning=F}
+# see contrast matrix. in the example,coef=1 means first comparison (group1-group2 above)
+complete_table=topTable(fit2,coef=4,number=nrow(v)) #make sure to change "coeff" is changed each time for each comparison
+
+guy11_vs_Dmst12_4h <- complete_table %>%
+  mutate(target_id=paste0(rownames(complete_table)),
+         DEG_status=case_when(
+    logFC >= 1 & adj.P.Val <= 0.05 ~ "upreg_in_guy11",
+    logFC <= -1 & adj.P.Val <= 0.05 ~ "downreg_in_guy11",
+    TRUE ~ "Not_DEG"))
+
+
+table(guy11_vs_Dmst12_4h$DEG_status)
+
+# save DEGs
+save_data(guy11_vs_Dmst12_4h,"guy11_vs_Dmst12_4h",format="tsv")
+
+# volcano plot
+comp_table<- complete_table %>%
+   mutate(GeneID=paste0(rownames(complete_table)))
+volcano_data <- comp_table %>%
+  mutate(
+    significance=case_when(
+      logFC >= 1 & adj.P.Val <= 0.05  ~ "Upreg in Guy11",
+      logFC <= -1 & adj.P.Val <= 0.05 ~ "Upreg in Dmst12",
+      TRUE ~ "NS"
+    ),
+    GeneID=gsub("T[0-9]", "",GeneID)
+  )
+
+
+top10_up <- volcano_data %>%
+  filter(significance == "Upreg in Guy11") %>%
+  slice_min(order_by=-logFC,n=10)
+
+top10_down <- volcano_data %>%
+  filter(significance == "Upreg in Dmst12") %>%
+  slice_min(order_by=logFC,n=10)
+
+top_genes <- bind_rows(top10_up,top10_down)
+
+volcano_data <- volcano_data %>%
+  mutate(label=ifelse(GeneID %in% top_genes$GeneID,as.character(GeneID),NA))
+
+ggplot(volcano_data,aes(x=logFC,y=-log10(adj.P.Val))) +
+  geom_point(aes(color=significance,alpha=0.5),shape=1,size=1) +
+  geom_vline(xintercept=c(-1,1),linetype="dashed",color="red") +
+  geom_hline(yintercept=-log10(0.05),linetype="dashed",color="red") +
+  scale_color_manual(values=c("Upreg in Guy11"="#7fc97f", "Upreg in Dmst12"="#beaed4", "NS"="grey80")) +
+  geom_text_repel(aes(label=label,color=significance),
+                  size=5,
+                  #box.padding=0.5,
+                  max.overlaps= 10) + 
+  labs(title="guy11_vs_Dmst12_4h",
+    x="Log2 Fold Change",
+    y="-Log10 Adjusted P-Value",
+    color="Expression") +
+  theme_bw(base_size=14) +   theme(legend.position="bottom")
+```
+
+# **24h**
+
+## For 24h guy11_vs_Dbip1
+
+```{r 24h_guy11_vs_Dbip1,fig.align='center',fig.width=10,fig.height=7,warning=F}
+# see contrast matrix. in the example,coef=1 means first comparison (group1-group2 above)
+complete_table=topTable(fit2,coef=5,number=nrow(v)) #make sure to change "coeff" is changed each time for each comparison
+guy11_vs_Dbip1_24h <- complete_table %>%
+  mutate(target_id=paste0(rownames(complete_table)),
+         DEG_status=case_when(
+    logFC >= 1 & adj.P.Val <= 0.05 ~ "upreg_in_guy11",
+    logFC <= -1 & adj.P.Val <= 0.05 ~ "downreg_in_guy11",
+    TRUE ~ "Not_DEG"))
+table(guy11_vs_Dbip1_24h$DEG_status)
+
+#save DEGs
+save_data(guy11_vs_Dbip1_24h,"guy11_vs_Dbip1_24h",format="tsv")
+
+#volcano plot
+comp_table<- complete_table %>%
+   mutate(GeneID=paste0(rownames(complete_table)))
+
+#volcano plot
+comp_table<- complete_table %>%
+   mutate(GeneID=paste0(rownames(complete_table)))
+volcano_data <- comp_table %>%
+  mutate(
+    significance=case_when(
+      logFC >= 1 & adj.P.Val <= 0.05  ~ "Upreg in Guy11",
+      logFC <= -1 & adj.P.Val <= 0.05 ~ "Upreg in Dbip1",
+      TRUE ~ "NS"
+    ),
+    GeneID=gsub("T[0-9]", "",GeneID)
+  )
+
+
+top10_up <- volcano_data %>%
+  filter(significance == "Upreg in Guy11") %>%
+  slice_min(order_by=-logFC,n=10)
+
+top10_down <- volcano_data %>%
+  filter(significance == "Upreg in Dbip1") %>%
+  slice_min(order_by=logFC,n=10)
+
+top_genes <- bind_rows(top10_up,top10_down)
+
+volcano_data <- volcano_data %>%
+  mutate(label=ifelse(GeneID %in% top_genes$GeneID,as.character(GeneID),NA))
+
+ggplot(volcano_data,aes(x=logFC,y=-log10(adj.P.Val))) +
+  geom_point(aes(color=significance,alpha=0.5),shape=1,size=1) +
+  geom_vline(xintercept=c(-1,1),linetype="dashed",color="red") +
+  geom_hline(yintercept=-log10(0.05),linetype="dashed",color="red") +
+  scale_color_manual(values=c("Upreg in Guy11"="#7fc97f", "Upreg in Dbip1"="#fdc086", "NS"="grey80")) +
+  geom_text_repel(aes(label=label,color=significance),
+                  size=5,
+                  #box.padding=0.5,
+                  max.overlaps= 10) + 
+  labs(title="guy11_vs_Dbip1_24h",
+    x="Log2 Fold Change",
+    y="-Log10 Adjusted P-Value",
+    color="Expression") +
+  theme_bw(base_size=14) +   theme(legend.position="bottom")
+```
+
+## For 24h guy11_vs_Dmst12
+
+```{r 24h_guy11_vs_Dmst12,fig.align='center',fig.width=10,fig.height=7,warning=F}
+# see contrast matrix. in the example,coef=1 means first comparison (group1-group2 above)
+complete_table=topTable(fit2,coef=6,number=nrow(v)) #make sure to change "coeff" is changed each time for each comparison
+
+guy11_vs_Dmst12_24h <- complete_table %>%
+  mutate(target_id=paste0(rownames(complete_table)),
+         DEG_status=case_when(
+    logFC >= 1 & adj.P.Val <= 0.05 ~ "upreg_in_guy11",
+    logFC <= -1 & adj.P.Val <= 0.05 ~ "downreg_in_guy11",
+    TRUE ~ "Not_DEG"))
+
+
+table(guy11_vs_Dmst12_24h$DEG_status)
+
+# save DEGs
+save_data(guy11_vs_Dmst12_24h,"guy11_vs_Dmst12_24h",format="tsv")
+
+# volcano plot
+comp_table<- complete_table %>%
+   mutate(GeneID=paste0(rownames(complete_table)))
+volcano_data <- comp_table %>%
+  mutate(
+    significance=case_when(
+      logFC >= 1 & adj.P.Val <= 0.05  ~ "Upreg in Guy11",
+      logFC <= -1 & adj.P.Val <= 0.05 ~ "Upreg in Dmst12",
+      TRUE ~ "NS"
+    ),
+    GeneID=gsub("T[0-9]", "",GeneID)
+  )
+
+
+top10_up <- volcano_data %>%
+  filter(significance == "Upreg in Guy11") %>%
+  slice_min(order_by=-logFC,n=10)
+
+top10_down <- volcano_data %>%
+  filter(significance == "Upreg in Dmst12") %>%
+  slice_min(order_by=logFC,n=10)
+
+top_genes <- bind_rows(top10_up,top10_down)
+
+volcano_data <- volcano_data %>%
+  mutate(label=ifelse(GeneID %in% top_genes$GeneID,as.character(GeneID),NA))
+
+ggplot(volcano_data,aes(x=logFC,y=-log10(adj.P.Val))) +
+  geom_point(aes(color=significance,alpha=0.5),shape=1,size=1) +
+  geom_vline(xintercept=c(-1,1),linetype="dashed",color="red") +
+  geom_hline(yintercept=-log10(0.05),linetype="dashed",color="red") +
+  scale_color_manual(values=c("Upreg in Guy11"="#7fc97f", "Upreg in Dmst12"="#beaed4", "NS"="grey80")) +
+  geom_text_repel(aes(label=label,color=significance),
+                  size=5,
+                  #box.padding=0.5,
+                  max.overlaps= 10) + 
+  labs(title="guy11_vs_Dmst12_24h",
+    x="Log2 Fold Change",
+    y="-Log10 Adjusted P-Value",
+    color="Expression") +
+  theme_bw(base_size=14) +   theme(legend.position="bottom")
+```
+
+# **Merged DEGs File**
+
+```{r merge_degs,message=F,warning=F}
+# Find all DEG files
+degs <- list.files(here("data/results/002_rna_seq"),pattern="\\.tsv$",full.names=TRUE)
+
+# Function to read each .tsv file and add a "comparison" column based on the filename
+read_and_add_comparison <- function(file) {
+  # Read the .tsv file
+  data <- read_tsv(file)
+  # Extract the file name without the path and extension
+  comparison <- tools::file_path_sans_ext(basename(file))
+  # Add the "comparison" column
+  data <- data %>% mutate(Comparison=comparison)
+  return(data)
+}
+
+# Use map_dfr to read and bind all .tsv files together
+merged_data <- map_dfr(degs,read_and_add_comparison)
+
+# Use the save_data helper function to save the merged data
+save_data(merged_data,"merged_DEGs_guy11_vs_Dbip1_Dmst12",format="csv")
+```
+
+# DEG Classification in Guy11
+
+```{r deg_classification,message=F,warning=F}
+# List of any genes of interest - here I'm using guy11,bip1 and mst12 DEGs to test with
+degs<- merged_data %>%
+  select(-any_of("Id")) %>%  # Remove any existing Id column first
+  dplyr::rename(Id=target_id) %>%
+  select(Id,Comparison,DEG_status) %>%
+  filter(DEG_status!="Not_DEG") %>%
+  mutate(
+    Id=str_remove(Id,"T[0-9]"),
+    sample=word(Comparison,3,3,"_"),
+    time=word(Comparison,4,4,"_"),
+    type=paste0(DEG_status,"_",time)) %>%
+  #filter(sample!="tbip1") %>%
+  select(Id,sample,type) %>%
+  group_by(Id,type) %>%
+  summarise(across(everything(),~ toString(unique(.))),.groups='drop') %>%
+  ungroup() %>%
+  pivot_wider(names_from=type,
+              values_from=sample,
+              values_fill="Not_DEG")
+save_data(degs,"degs_in_guy11",format="csv")
+```
+
+# **Total Number of DEGs**
+
+```{r plot_degs,fig.align='center',fig.width=10,fig.height=5,warning=F}
+degs_filt <- merged_data %>%
+  select(target_id,Comparison,DEG_status) %>%
+  filter(DEG_status!="Not_DEG") %>%
+  mutate(time=word(Comparison,sep="_",4,4),
+         sample=word(Comparison,sep="_",3,3))
+
+comm_degs<-degs_filt %>%
+  mutate(time_sample=paste0(time,"_",sample)) %>%
+  select(target_id,DEG_status,time_sample) %>%
+  pivot_wider(names_from=time_sample,
+              values_from=DEG_status)
+
+#summary count of target_ids by time and DEG_status
+deg_summary <- degs_filt %>%
+  group_by(time,sample,DEG_status) %>%
+  summarise(count=n()) %>%
+  ungroup()
+
+deg_summary <- deg_summary %>%
+  mutate(count=ifelse(DEG_status == "downreg_in_guy11",-count,count),
+         DEG_status=ifelse(count<=0,paste0("upreg_in_",sample),DEG_status))
+
+ggplot(deg_summary,aes(y=factor(time,levels=c("0h", "4h", "24h")),x=count,fill=DEG_status)) +
+  geom_bar(stat="identity",position="identity",width=0.4) +  
+  geom_text(aes(label=abs(count)),
+            hjust=ifelse(deg_summary$count < 0,-0.1,1.1),
+            size=5,color="black") +
+  theme_light() +
+  facet_wrap(~sample,ncol=3)+
+  labs(y="",x="Number of DEGs",fill="") +
+  theme(axis.text.x=element_text(size=18),
+        axis.text.y=element_text(size=18),
+        axis.title=element_text(size=22),
+        legend.position="bottom",
+        strip.background=element_blank(),
+        strip.text= element_text(color="black",size=18,face="italic")) +
+  scale_fill_manual(values=c("#7fc97f", "#fdc086", "#beaed4")) +
+  scale_color_manual(values=c("#7fc97f", "#fdc086", "#beaed4")) +
+  ggtitle("Differentially expressed genes for each timepoint") +
+  scale_x_continuous(labels=abs)
+
+```
+
+```{r}
+sessionInfo()
+```

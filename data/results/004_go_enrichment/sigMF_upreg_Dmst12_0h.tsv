@@ -1,0 +1,14 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0000166	nucleotide binding	1397	79	71.57	0.00049
+GO:0004783	sulfite reductase (NADPH) activity	2	2	0.1	0.00262
+GO:0008379	thioredoxin peroxidase activity	2	2	0.1	0.00262
+GO:0003755	peptidyl-prolyl cis-trans isomerase acti...	21	5	1.08	0.00355
+GO:0016491	oxidoreductase activity	982	75	50.31	0.00460
+GO:0051787	misfolded protein binding	3	2	0.15	0.00759
+GO:0051879	Hsp90 protein binding	4	2	0.2	0.01467
+GO:0003839	gamma-glutamylcyclotransferase activity	4	2	0.2	0.01467
+GO:0051213	dioxygenase activity	71	7	3.64	0.02067
+GO:0016151	nickel cation binding	5	2	0.26	0.02362
+GO:0008080	N-acetyltransferase activity	49	6	2.51	0.03143
+GO:0050661	NADP binding	38	5	1.95	0.04303
+GO:0004784	superoxide dismutase activity	7	2	0.36	0.04633

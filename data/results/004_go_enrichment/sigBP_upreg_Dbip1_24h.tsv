@@ -1,0 +1,15 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0055085	transmembrane transport	606	94	59.81	9.9e-06
+GO:0008152	metabolic process	3931	356	387.97	0.00057
+GO:0035672	oligopeptide transmembrane transport	13	6	1.28	0.00085
+GO:0006878	intracellular copper ion homeostasis	11	5	1.09	0.00257
+GO:0035434	copper ion transmembrane transport	8	4	0.79	0.00476
+GO:0019441	tryptophan catabolic process to kynureni...	8	4	0.79	0.00476
+GO:0071918	urea transmembrane transport	2	2	0.2	0.00973
+GO:0008295	spermidine biosynthetic process	2	2	0.2	0.00973
+GO:0009398	FMN biosynthetic process	2	2	0.2	0.00973
+GO:0032259	methylation	161	20	15.89	0.02063
+GO:0019408	dolichol biosynthetic process	3	2	0.3	0.02727
+GO:0006826	iron ion transport	13	4	1.28	0.03261
+GO:0009103	lipopolysaccharide biosynthetic process	8	3	0.79	0.03673
+GO:1901360	organic cyclic compound metabolic proces...	1519	113	149.92	0.04020

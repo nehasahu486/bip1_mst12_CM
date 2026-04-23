@@ -1,0 +1,95 @@
+---
+title: "Clean fasta headers in the proteome files to be used in OrthoFinder analysis"
+author: "Neha Sahu"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  fig.width = 10, 
+  fig.height = 7
+)
+```
+
+# Introduction
+
+This document explains the script designed to handle raw fasta files with complex headers, non-uniform and file names, making them more user-friendly and easier to work with.
+
+# Load libraries
+
+```{r }
+library(here)
+library(tidyverse)
+library(phylotools)
+library(seqinr)
+```
+
+# List and read the raw fasta files
+
+```{r }
+file_names <- list.files(here("data/raw/sequences/","input_files"), full.names = TRUE)
+file_names
+```
+
+# Read and merge into single data frame
+
+```{r}
+fasta_data <- map_dfr(file_names, ~ cbind(phylotools::read.fasta(.x), filename = basename(.x))) 
+head(fasta_data)
+```
+
+# Add new columns for new names and new fasta headers that are simplified for further analyses
+
+```{r}
+fasta_data <- fasta_data %>%
+  group_by(filename) %>%
+  mutate(new_headers = paste0(substr(filename, 1, 5),"_",sub("^.*?_(.{5}).*", "\\1", filename), "_", row_number()), # Create a new_headers columns - abbreviates based on filename
+         names=paste0(substr(filename, 1, 5),"_",sub("^.*?_(.{5}).*", "\\1", filename))) # For replacing complicated filenames with simple names
+length(unique(fasta_data$names))
+length(unique(fasta_data$filename))
+#The above two numbers should be the same
+fasta_data$seq.text <- gsub("[^A-Za-z0-9]", "", fasta_data$seq.text) # Remove special characters with nothing
+```
+
+# Write each split data frame to a separate fasta file which will be saved in the fasta_files folder
+
+```{r}
+# Create directory to save the fasta files with cleaned headers
+if (!dir.exists(here("data", "processed", "fasta_files"))) {
+  dir.create(here("data", "processed", "fasta_files"), recursive = TRUE)
+}
+
+# Split the fasta data by names
+fasta_data_split <- split(fasta_data, f = fasta_data$names)
+
+# Write each species to a separate fasta file
+result <- lapply(names(fasta_data_split), function(x) {
+    # Create the full path using here() to be consistent
+    output_file <- here("data", "processed", "fasta_files", 
+                        paste0(fasta_data_split[[x]]$names[1], ".fasta"))
+    # Write fasta files
+    write.fasta(as.list(fasta_data_split[[x]]$seq.text), 
+                fasta_data_split[[x]]$new_headers, 
+                file.out = output_file,  # Use the full path with here()
+                open = "w", 
+                as.string = FALSE)
+})
+```
+
+# IMPORTANT
+
+**BEFORE RUNNING OrthoFinder: To this final folder called fasta_files, replace the Magna_oryzae.fasta with MG8 genome from Ensembl (**<https://fungi.ensembl.org/Magnaporthe_oryzae/Info/Index>) **to have a proteome with compatible MGG_IDs**
+
+```{r}
+sessionInfo()
+```

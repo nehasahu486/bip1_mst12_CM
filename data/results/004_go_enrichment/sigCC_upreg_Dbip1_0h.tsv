@@ -1,0 +1,6 @@
+GO.ID	Term	Annotated	Significant	Expected	topgoFisher
+GO:0005829	cytosol	178	25	12.11	0.0012
+GO:0005737	cytoplasm	1545	115	105.15	0.0046
+GO:0005885	Arp2/3 protein complex	7	3	0.48	0.0089
+GO:0019008	molybdopterin synthase complex	3	2	0.2	0.0132
+GO:0140453	protein aggregate center	4	2	0.27	0.0253
