@@ -17,4 +17,5 @@ This repository contains the analyses, scripts and files used for _M. oryzae_ Bi
 - `analysis/` - Detailed Markdown files
 - `data/results/` - Processed analysis results, plots, and summary tables
 - `scripts/` - Scripts and/or workflows used
+- `bin/` - Miscellaneous stuff
 
