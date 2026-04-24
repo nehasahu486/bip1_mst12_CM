@@ -1,6 +1,6 @@
 ## Description
 
-This repository contains the analyses, scripts and files performed for _M. oryzae_Bip1 project.
+This repository contains the analyses, scripts and files used for _M. oryzae_ Bip1 project.
 
 
 ## Table of Contents
@@ -17,4 +17,5 @@ This repository contains the analyses, scripts and files performed for _M. oryza
 - `analysis/` - Detailed Markdown files
 - `data/results/` - Processed analysis results, plots, and summary tables
 - `scripts/` - Scripts and/or workflows used
+- `bin/` - Miscellaneous stuff
 
