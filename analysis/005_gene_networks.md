@@ -11,18 +11,18 @@ Neha Sahu
   - [Base Network](#base-network)
   - [Mapping differentially expressed genes on the Base
     Network](#mapping-differentially-expressed-genes-on-the-base-network)
-    - [Downreg in Guy11 at 0h (Upregulated in Bip1/Mst12 at 0h)
-      ![](../data/results/005_gene_networks/00_figures/downreg_in_guy11_0h.png)](#downreg-in-guy11-at-0h-upregulated-in-bip1mst12-at-0h-)
-    - [Downreg in Guy11 at 4h (Upregulated in Bip1/Mst12 at 4h)
-      ![](../data/results/005_gene_networks/00_figures/downreg_in_guy11_4h.png)](#downreg-in-guy11-at-4h-upregulated-in-bip1mst12-at-4h-)
-    - [Downreg in Guy11 at 24h (Upregulated in Bip1/Mst12 at 24h)
-      ![](../data/results/005_gene_networks/00_figures/downreg_in_guy11_24h.png)](#downreg-in-guy11-at-24h-upregulated-in-bip1mst12-at-24h-)
-    - [Upreg in Guy11 at 0h (Downregulated in Bip1/Mst12 at 0h)
-      ![](../data/results/005_gene_networks/00_figures/upreg_in_guy11_0h.png)](#upreg-in-guy11-at-0h-downregulated-in-bip1mst12-at-0h-)
-    - [Upreg in Guy11 at 4h (Downregulated in Bip1/Mst12 at 4h)
-      ![](../data/results/005_gene_networks/00_figures/upreg_in_guy11_4h.png)](#upreg-in-guy11-at-4h-downregulated-in-bip1mst12-at-4h-)
-    - [Upreg in Guy11 at 24h (Downregulated in Bip1/Mst12 at 24h)
-      ![](../data/results/005_gene_networks/00_figures/upreg_in_guy11_24h.png)](#upreg-in-guy11-at-24h-downregulated-in-bip1mst12-at-24h-)
+    - [Downreg in Guy11 at 0h (Upregulated in Bip1/Mst12 at
+      0h)](#downreg-in-guy11-at-0h-upregulated-in-bip1mst12-at-0h)
+    - [Downreg in Guy11 at 4h (Upregulated in Bip1/Mst12 at
+      4h)](#downreg-in-guy11-at-4h-upregulated-in-bip1mst12-at-4h)
+    - [Downreg in Guy11 at 24h (Upregulated in Bip1/Mst12 at
+      24h)](#downreg-in-guy11-at-24h-upregulated-in-bip1mst12-at-24h)
+    - [Upreg in Guy11 at 0h (Downregulated in Bip1/Mst12 at
+      0h)](#upreg-in-guy11-at-0h-downregulated-in-bip1mst12-at-0h)
+    - [Upreg in Guy11 at 4h (Downregulated in Bip1/Mst12 at
+      4h)](#upreg-in-guy11-at-4h-downregulated-in-bip1mst12-at-4h)
+    - [Upreg in Guy11 at 24h (Downregulated in Bip1/Mst12 at
+      24h)](#upreg-in-guy11-at-24h-downregulated-in-bip1mst12-at-24h)
 
 # Description
 
@@ -285,17 +285,29 @@ Differentially regulated in Dmst12="#beaed4"
 Differentially regulated in Both Dbip1 and Dmst12 : "#ffff99"
 ```
 
-### Downreg in Guy11 at 0h (Upregulated in Bip1/Mst12 at 0h) ![](../data/results/005_gene_networks/00_figures/downreg_in_guy11_0h.png)
+### Downreg in Guy11 at 0h (Upregulated in Bip1/Mst12 at 0h)
 
-### Downreg in Guy11 at 4h (Upregulated in Bip1/Mst12 at 4h) ![](../data/results/005_gene_networks/00_figures/downreg_in_guy11_4h.png)
+![](../data/results/005_gene_networks/00_figures/downreg_in_guy11_0h.png)
 
-### Downreg in Guy11 at 24h (Upregulated in Bip1/Mst12 at 24h) ![](../data/results/005_gene_networks/00_figures/downreg_in_guy11_24h.png)
+### Downreg in Guy11 at 4h (Upregulated in Bip1/Mst12 at 4h)
 
-### Upreg in Guy11 at 0h (Downregulated in Bip1/Mst12 at 0h) ![](../data/results/005_gene_networks/00_figures/upreg_in_guy11_0h.png)
+![](../data/results/005_gene_networks/00_figures/downreg_in_guy11_4h.png)
 
-### Upreg in Guy11 at 4h (Downregulated in Bip1/Mst12 at 4h) ![](../data/results/005_gene_networks/00_figures/upreg_in_guy11_4h.png)
+### Downreg in Guy11 at 24h (Upregulated in Bip1/Mst12 at 24h)
 
-### Upreg in Guy11 at 24h (Downregulated in Bip1/Mst12 at 24h) ![](../data/results/005_gene_networks/00_figures/upreg_in_guy11_24h.png)
+![](../data/results/005_gene_networks/00_figures/downreg_in_guy11_24h.png)
+
+### Upreg in Guy11 at 0h (Downregulated in Bip1/Mst12 at 0h)
+
+![](../data/results/005_gene_networks/00_figures/upreg_in_guy11_0h.png)
+
+### Upreg in Guy11 at 4h (Downregulated in Bip1/Mst12 at 4h)
+
+![](../data/results/005_gene_networks/00_figures/upreg_in_guy11_4h.png)
+
+### Upreg in Guy11 at 24h (Downregulated in Bip1/Mst12 at 24h)
+
+![](../data/results/005_gene_networks/00_figures/upreg_in_guy11_24h.png)
 
 ``` r
 sessionInfo()
