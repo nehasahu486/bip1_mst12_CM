@@ -3,12 +3,6 @@ title: "Conservation of Bip1 and Mst12 in other fungi"
 author: "Neha Sahu"
 date: "`r format(Sys.time(),'%d %B,%Y')`"
 output:
-  html_document:
-    toc: true
-    toc_float: true
-    theme: yeti
-    highlight: pygments
-    code_folding: show
   github_document:
     toc: true
     toc_depth: 3
@@ -16,6 +10,12 @@ output:
     fig_height: 8
     dev: "png"
     html_preview: false
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    highlight: pygments
+    code_folding: show
 editor_options:             
   chunk_output_type: inline
 ---
@@ -103,7 +103,7 @@ library(phylotools)
 ## Load Species Tree
 
 ```{r load-tree,fig.align='center',fig.height=10,fig.width=6}
-tree<-read.tree(here("data/raw/001_orthologs/","SpeciesTree_rooted.txt"))
+tree<-read.tree(here("data/processed/001_orthologs/","SpeciesTree_rooted.txt"))
 
 # Ladderize tree for better visualization
 LadderizeTree <- function(tree,temp_file="temp",orientation="left"){
@@ -129,7 +129,7 @@ plot(tree) # This is the ladderized species tree
 ## Load Orthogroups GeneCount file
 
 ```{r load-orthogroups gene count}
-og_count<-read_tsv(here("data/raw/001_orthologs/","Orthogroups.GeneCount.tsv")) %>%
+og_count<-read_tsv(here("data/processed/001_orthologs/","Orthogroups.GeneCount.tsv")) %>%
   melt() %>%
   rename(
          Species=variable,
@@ -142,7 +142,7 @@ head(og_count)
 This file will be used to check the Orthogroup ID (starting with OG00xxx) for any Magnaporthe protein (suffix MGG\_)
 
 ```{r load-orthogroups}
-og_prot_id<-read_tsv(here("data/raw/001_orthologs/","Orthogroups.txt")) %>%
+og_prot_id<-read_tsv(here("data/processed/001_orthologs/","Orthogroups.txt")) %>%
   separate_rows(ProtID,sep=", ")
 
 favourite_mgg_id<- c("MGG_12958T0","MGG_08118T0") # these are mst12 and bip1 and T0 suffix is for the transcript
@@ -157,7 +157,7 @@ og_id_of_fav_mgg_id
 Lifestyle information for the list of species used was sourced from Data S3. Dataset for evolutionary analysis,related to Figure 3 in <https://www.sciencedirect.com/science/article/pii/S0092867424004021?via%3Dihub#mmc>
 
 ```{r load-lifestyle}
-lf<-read_tsv(here("data/raw/001_orthologs/","Lifestyle.tsv"))
+lf<-read_tsv(here("data/processed/001_orthologs/","Lifestyle.tsv"))
 ```
 
 ## File with results

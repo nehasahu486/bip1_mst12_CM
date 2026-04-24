@@ -1,7 +1,7 @@
 Conservation of Bip1 and Mst12 in other fungi
 ================
 Neha Sahu
-23 April,2026
+24 April,2026
 
 - [**Description**](#description)
 - [**Collect Fasta files and Run
@@ -20,12 +20,12 @@ Neha Sahu
 # **Description**
 
 Camilla wants to check the orthologs for two Magnaporthe oryzae genes -
-MST12 (MGG_12958T0) and BIP1 (MGG_08118T0) - across 40 fungal species
+MST12 (MGG_12958T0) and BIP1 (MGG_08118T0) - across 42 fungal species
 (Nef’s dataset from Pmk1 phosphoproteomics paper -
 <https://www.cell.com/cell/fulltext/S0092-8674(24)00402-1>).
 
-To do that,I performed the phylogenetic analysis and ortholog
-identification from OrthoFinder results,and visualize the presence and
+To do that, I performed the phylogenetic analysis and ortholog
+identification using OrthoFinder results,and visualize the presence and
 copy number of these genes in relation to fungal lifestyle and
 evolutionary relationships (information collected from the paper.
 
@@ -121,7 +121,7 @@ library(phylotools)
 ## Load Species Tree
 
 ``` r
-tree<-read.tree(here("data/raw/001_orthologs/","SpeciesTree_rooted.txt"))
+tree<-read.tree(here("data/processed/001_orthologs/","SpeciesTree_rooted.txt"))
 
 # Ladderize tree for better visualization
 LadderizeTree <- function(tree,temp_file="temp",orientation="left"){
@@ -149,7 +149,7 @@ plot(tree) # This is the ladderized species tree
 ## Load Orthogroups GeneCount file
 
 ``` r
-og_count<-read_tsv(here("data/raw/001_orthologs/","Orthogroups.GeneCount.tsv")) %>%
+og_count<-read_tsv(here("data/processed/001_orthologs/","Orthogroups.GeneCount.tsv")) %>%
   melt() %>%
   rename(
          Species=variable,
@@ -171,7 +171,7 @@ This file will be used to check the Orthogroup ID (starting with
 OG00xxx) for any Magnaporthe protein (suffix MGG\_)
 
 ``` r
-og_prot_id<-read_tsv(here("data/raw/001_orthologs/","Orthogroups.txt")) %>%
+og_prot_id<-read_tsv(here("data/processed/001_orthologs/","Orthogroups.txt")) %>%
   separate_rows(ProtID,sep=", ")
 
 favourite_mgg_id<- c("MGG_12958T0","MGG_08118T0") # these are mst12 and bip1 and T0 suffix is for the transcript
@@ -194,7 +194,7 @@ S3. Dataset for evolutionary analysis,related to Figure 3 in
 <https://www.sciencedirect.com/science/article/pii/S0092867424004021?via%3Dihub#mmc>
 
 ``` r
-lf<-read_tsv(here("data/raw/001_orthologs/","Lifestyle.tsv"))
+lf<-read_tsv(here("data/processed/001_orthologs/","Lifestyle.tsv"))
 ```
 
 ## File with results

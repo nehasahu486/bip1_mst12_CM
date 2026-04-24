@@ -104,7 +104,7 @@ library(ggrepel)
 Specify where the kallisto results are stored and create a read counts file: tpm table - non log transformed and no addition of any values (eg. 0.05) to avoid DIV0
 
 ```{r load_kallisto}
-dirs <- list.dirs(here("data/interim/", "kallisto_output_fungal"),full.names=TRUE,recursive=FALSE)
+dirs <- list.dirs(here("data/processed/", "kallisto_output_fungal"),full.names=TRUE,recursive=FALSE)
 
 # Initialize an empty list to store data frames
 est_counts_list <- list()

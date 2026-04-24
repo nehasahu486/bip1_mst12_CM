@@ -1,7 +1,7 @@
 RNASeq analysis for Guy11 and Dbip1 and Dmst12
 ================
 Neha Sahu
-23 April,2026
+24 April,2026
 
 - [Description](#description)
   - [GoHREP](#gohrep)
@@ -136,7 +136,7 @@ file: tpm table - non log transformed and no addition of any values (eg.
 0.05) to avoid DIV0
 
 ``` r
-dirs <- list.dirs(here("data/interim/", "kallisto_output_fungal"),full.names=TRUE,recursive=FALSE)
+dirs <- list.dirs(here("data/processed/", "kallisto_output_fungal"),full.names=TRUE,recursive=FALSE)
 
 # Initialize an empty list to store data frames
 est_counts_list <- list()
