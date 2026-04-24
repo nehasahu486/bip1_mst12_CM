@@ -1,0 +1,13 @@
+{
+	"n_targets": 13307,
+	"n_bootstraps": 100,
+	"n_processed": 23556948,
+	"n_pseudoaligned": 20989204,
+	"n_unique": 20107874,
+	"p_pseudoaligned": 89.1,
+	"p_unique": 85.4,
+	"kallisto_version": "0.46.2",
+	"index_version": 10,
+	"start_time": "Fri Feb 14 17:08:25 2025",
+	"call": "kallisto quant -i MG8_cdna.idx -o kallisto_output_fungal/Dmst12_24h_3_EKRN240063958-1A_22LJ3YLT4_L6 --threads 24 -b 100 trimmed/Dmst12_24h_3_EKRN240063958-1A_22LJ3YLT4_L6_paired_1.fastq.gz trimmed/Dmst12_24h_3_EKRN240063958-1A_22LJ3YLT4_L6_paired_1.fastq.gz"
+}
