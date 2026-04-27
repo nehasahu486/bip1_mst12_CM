@@ -32,6 +32,6 @@ For questions about the analytical methods, code implementation, or adapting the
 
 ---
 
-*Computational framework was for Bip1 project in Magnaporthe oryzae.*
+*Computational framework developed for Bip1 project in Magnaporthe oryzae.*
 
 
