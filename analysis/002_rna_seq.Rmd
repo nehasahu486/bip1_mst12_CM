@@ -32,33 +32,54 @@ knitr::opts_chunk$set(
 
 # Description
 
-Lab notes for RNA-Seq data analysis and differential gene expression in *Magnaporthe oryzae* wild-type (Guy11) compared to null mutant strains (Dbip1 and Dmst12) across a time-course experiment. The analysis identifies differentially expressed genes at multiple timepoints (0h, 4h,and 24h),visualizes results through volcano plots,and identifies key genes with altered expression in mutant backgrounds.
+Lab notes for RNA-Seq data analysis and differential gene expression in
+*Magnaporthe oryzae* wild-type (Guy11) compared to null mutant strains
+(Dbip1 and Dmst12) across a time-course experiment. The analysis
+identifies differentially expressed genes at multiple timepoints (0h,
+4h,and 24h),visualizes results through volcano plots,and identifies key
+genes with altered expression in mutant backgrounds.
 
 ## GoHREP
 
 **Goal:**
 
-To identify genes differentially regulated in M. oryzae null mutant strains (Dbip1,Dmst12) compared to wild-type Guy11 across multiple timepoints to understand processes regulated by these genes during fungal development and potential infection processes.
+To identify genes differentially regulated in M. oryzae null mutant
+strains (Dbip1,Dmst12) compared to wild-type Guy11 across multiple
+timepoints to understand processes regulated by these genes during
+fungal development and potential infection processes.
 
 **Hypothesis:**\
-*Camilla* has a hypothesis that bip1 and mst12 are co-regulated. By checking the gene regulation in deletion mutants of bip1 and mst12 at different timepoints,we can see if that's the case or not.
+*Camilla* has a hypothesis that bip1 and mst12 are co-regulated. By
+checking the gene regulation in deletion mutants of bip1 and mst12 at
+different timepoints,we can see if that's the case or not.
 
 **Rationale:**\
-Understanding how key regulatory genes influence global gene expression patterns can reveal their functional roles and regulatory networks. By comparing transcriptional profiles of wild-type and mutant strains across different timepoints,we can identify genes and pathways specifically regulated by bip1,mst12.
+Understanding how key regulatory genes influence global gene expression
+patterns can reveal their functional roles and regulatory networks. By
+comparing transcriptional profiles of wild-type and mutant strains
+across different timepoints,we can identify genes and pathways
+specifically regulated by bip1,mst12.
 
 **Experimental plan:**
 
-Analyze RNA-seq data from wild-type Guy11 and null mutant strains (Dbip1,Dmst12) at three timepoints (0h,4h,and 24h)
+Analyze RNA-seq data from wild-type Guy11 and null mutant strains
+(Dbip1,Dmst12) at three timepoints (0h,4h,and 24h)
 
--   Perform quality control of RNA-seq data using FastQC/MultiQC to assess sequencing quality metrics
+-   Perform quality control of RNA-seq data using FastQC/MultiQC to
+    assess sequencing quality metrics
 
--   Process raw reads with Trimmomatic to remove adapters and low-quality sequences
+-   Process raw reads with Trimmomatic to remove adapters and
+    low-quality sequences
 
--   Map processed reads to the *M. oryzae* reference transcriptome using Kallisto for transcript quantification
+-   Map processed reads to the *M. oryzae* reference transcriptome using
+    Kallisto for transcript quantification
 
--   Identify differentially expressed genes (DEGs) using edgeR,with thresholds of \|log2FC\| ≥ 1 and adjusted p-value ≤ 0.05
+-   Identify differentially expressed genes (DEGs) using edgeR,with
+    thresholds of \|log2FC\| ≥ 1 and adjusted p-value ≤ 0.05
 
--   Visualize differential expression through volcano plots, highlighting the top 10 or 15 most significantly up- and down-regulated genes
+-   Visualize differential expression through volcano plots,
+    highlighting the top 10 or 15 most significantly up- and
+    down-regulated genes
 
 ## RNA Samples
 
@@ -72,21 +93,35 @@ Analyze RNA-seq data from wild-type Guy11 and null mutant strains (Dbip1,Dmst12)
 
 **- FastQC and MultiQC with raw files**
 
-The raw fastq files from Novogene are located on the HPC (saved by Camilla). FastQC and MultiQC can be sourced from `scripts/002_rna_seq/001_fastqc_multiqc.sh`
+The raw fastq files from Novogene are located on the HPC (saved by
+Camilla). FastQC and MultiQC can be sourced from
+`scripts/002_rna_seq/001_fastqc_multiqc.sh`
 
 **- Trimmomatic to remove adapters**
 
-The QC shows that the fastq files has adapters that need to be trimmed. I used trimmomatic to trim the adapter regions and low quality sequences. Script used can be sourced from `scripts/002_rna_seq/002_trim.sh`. The trimmed read files were again processed though FastQC/MultiQC to confirm the results. Script is located at `scripts/002_rna_seq/003_trimmed_fastqc_multiqc.sh`
+The QC shows that the fastq files has adapters that need to be trimmed.
+I used trimmomatic to trim the adapter regions and low quality
+sequences. Script used can be sourced from
+`scripts/002_rna_seq/002_trim.sh`. The trimmed read files were again
+processed though FastQC/MultiQC to confirm the results. Script is
+located at `scripts/002_rna_seq/003_trimmed_fastqc_multiqc.sh`
 
-QC of all the samples look good - per sequence and mean quality score are in the green region (\>=35) and GC distribution shows a nice bell shape - proceed with read mapping.
+QC of all the samples look good - per sequence and mean quality score
+are in the green region (\>=35) and GC distribution shows a nice bell
+shape - proceed with read mapping.
 
 ## Read Mapping
 
 **- Kallisto (pseudoalignment)**
 
-**Kallisto** is a program for quantifying abundances of transcripts from bulk and single-cell RNA-Seq data,or more generally of target sequences using high-throughput sequencing reads.
+**Kallisto** is a program for quantifying abundances of transcripts from
+bulk and single-cell RNA-Seq data,or more generally of target sequences
+using high-throughput sequencing reads.
 
-**NOTE: Kallisto can ONLY use transcripts file (cDNA) and not the whole genome fasta.** Source: <https://pachterlab.github.io/kallisto/about>. The script used to run Kallisto can be sourced from `scripts/002_rna_seq/004_fungal_kallisto_trimmed.sh`
+**NOTE: Kallisto can ONLY use transcripts file (cDNA) and not the whole
+genome fasta.** Source: <https://pachterlab.github.io/kallisto/about>.
+The script used to run Kallisto can be sourced from
+`scripts/002_rna_seq/004_fungal_kallisto_trimmed.sh`
 
 # **Differentially Expressed Genes (DEGs)**
 
@@ -101,7 +136,9 @@ library(ggrepel)
 
 ## Load Kallisto Results
 
-Specify where the kallisto results are stored and create a read counts file: tpm table - non log transformed and no addition of any values (eg. 0.05) to avoid DIV0
+Specify where the kallisto results are stored and create a read counts
+file: tpm table - non log transformed and no addition of any values (eg.
+0.05) to avoid DIV0
 
 ```{r load_kallisto}
 dirs <- list.dirs(here("data/processed/", "kallisto_output_fungal"),full.names=TRUE,recursive=FALSE)
