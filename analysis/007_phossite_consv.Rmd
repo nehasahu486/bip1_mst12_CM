@@ -1,0 +1,262 @@
+---
+title: "Conservation of phosphorylated sites from Bip1 in other fungi"
+author: "Neha Sahu"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  github_document:
+    toc: true
+    toc_depth: 3
+    dev: "png"
+    html_preview: false
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    highlight: pygments
+    code_folding: show
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+library(here)
+source(here("scripts","analysis_config.R"))
+init_analysis("007_phossite_consv")
+
+knitr::opts_chunk$set(
+  fig.path="../data/results/007_phossite_consv/00_figures/"
+)
+```
+
+# Description
+
+Based on Nef's pmk1 phosphoproteomics work, we found S32 and S34 as
+phosphorylation sites on Bip1. These sites are thought to be regulated
+by Pmk1, and/or during appressorium development, so they might have some
+role in fungal pathogenicity. And we want to check the conservation of
+Bip1 phosophorylation sites in fungi from various lifestyles.
+
+## Hypothesis
+
+If a phosphorylation site is functionally important, we would expect it
+to be conserved across many related fungal species, particularly in
+species that share a similar lifestyle (e.g., hemibiptrophs or any
+another such plant pathogenic lifestyle). Moreover, if such a site is
+absent in some lifestyles that are not pathogens, that would tell us
+about whether it is linked to a specific ecological strategy.
+
+In this analysis, we ask: across 42 fungal species with different
+lifestyles, how often is each Bip1 phosphosite conserved? For this, I
+used the orthogroups info from analyses in `001_orthologs` and
+phosphosite conservation results from the new phoscon
+(<https://github.com/nehasahu486/phoscon/tree/main>) pipeline.
+
+## Load Required Packages
+
+```{r load-packages}
+library(tidyverse)
+library(ggridges)
+```
+
+## Check phosphosites for Bip1 gene
+
+```{r bip1_sites}
+# ---- GOI ----
+target_protein  <- "MGG_08118T0"
+target_phos_site <- NULL         # e.g. "MGG_08118-S206"; NULL = all sites for that protein
+
+
+# colors for annotations - same as Nef's paper
+lifestyle_cols <- c(
+  "Biotroph" = "#b2df8a",
+  "Hemibiotroph" = "#33a02c",
+  "Necrotroph" = "#075C07",
+  "Saprophyte" = "#542519",
+  "Symbiont" = "#ffd700",
+  "Commensal" = "#e1d5c4",
+  "Endophyte" = "#80493C"
+)
+
+
+all_lifestyles <- names(lifestyle_cols)
+
+# Lifestyles info
+species_annot <- read_tsv(here("data/raw/Lifestyle_42sps.tsv"),show_col_types = F)
+
+# Read the results from phoscon
+plot_df <- read_tsv(here("data/raw/phoscon_aggregated_by_species_42sps.tsv")) %>%
+  filter(protein_id == target_protein) %>%
+  { if (!is.null(target_phos_site)) filter(., phos_site_id == target_phos_site) else . } %>%
+  left_join(species_annot, by = c("species" = "Species")) %>%
+  filter(!is.na(Lifestyle)) %>%
+  mutate(prop_conserved = if_else(is.na(prop_conserved) | prop_conserved < 0, 0, prop_conserved))
+
+site_ids <- unique(plot_df$phos_site_id)
+site_ids # phosphosites identified in bip1
+
+```
+
+We use output from the phoscon pipeline that I ran previously in a
+different project, TL;DR: phoscon uses aligned protein sequences across
+species and checks whether each phosphorylatable residue (here, serine
+S32 and S34 in Bip1) is present at the equivalent position in each
+species. The result is a percentage conservation score per species: 100%
+means the site is present, 0% means it is absent.
+
+Based on Nef's paper, the were two phosphosites identified in Bip1
+(MGG_08118) - and these were S32 and S34.
+
+Here, I want to visualize how each phosphosite is conserved across all
+species within each lifestyle group. And plot them in a way that in
+y-axis each row is a lifestyle, and the x-axis shows the % conservation
+score (0% = site absent, 100% = site present). The shape of the ridge
+depicts where most species in that group fall.
+
+**Note on padding**: Some lifestyle groups had very few species (or none
+at all) in the dataset that had the site conserved leading to empty
+rows. To prevent empty rows in the plot from causing visual artefacts, a
+small amount of artificial data (random values near 0%) was added for
+missing lifestyle–site combinations. This does not affect biological
+interpretation but was done just to show all seven lifestyles appear on
+the y-axis.
+
+```{r ridges_df}
+padding_df <- expand.grid(
+  phos_site_id = site_ids,
+  Lifestyle    = all_lifestyles,
+  stringsAsFactors = FALSE
+) %>%
+  anti_join(plot_df %>%
+              dplyr::select(phos_site_id, Lifestyle) %>% distinct(),
+            by = c("phos_site_id", "Lifestyle")) %>%
+  dplyr::slice(rep(1:n(), each = 30)) %>%
+  mutate(prop_conserved = rnorm(n(), mean = 0, sd = 0.5))
+
+plot_df <- bind_rows(plot_df, padding_df) %>%
+  mutate(Lifestyle = factor(Lifestyle, levels = rev(all_lifestyles)))
+
+ggplot(plot_df, aes(x = prop_conserved, y = Lifestyle, fill = Lifestyle)) +
+  geom_density_ridges(alpha = 0.8, scale = 1.2, rel_min_height = 0,
+                      bandwidth = 5) +
+  scale_fill_manual(values = lifestyle_cols, drop = FALSE) +
+  scale_x_continuous(breaks = c(0, 25, 50, 75, 100)) +
+  coord_cartesian(xlim = c(-2, 110)) +          # clips VIEW only, data intact
+  facet_wrap(~phos_site_id, ncol = 2) +
+  labs(x = "% of Conserved Phosphosite", y = NULL
+  ) +
+  theme_bw(base_size = 16) +
+  theme(
+    legend.position = "none",
+    strip.background = element_rect(fill = "white", color = NA),
+    strip.text = element_text(face = "bold"),
+    panel.spacing = unit(1, "lines"),
+    axis.text=element_text(size=14,color="black")
+  )
+```
+
+#### How to read the above plot: 
+
+E.g. in S32 plots - Each ridge represents the distribution of
+conservation scores for species in that lifestyle group
+
+-   Peak near 100% is when most species in that group have the
+    phosphosite conserved (eg hemibiotophs)
+
+-   Peak near 0% is when most species in that group DO NOT have
+    phosphosite conserved (eg symbiont, commensal, endophyte)
+
+-   Two peaks is when some species have it, some don't (eg biotrophs,
+    necrotrophs, saprotrophs)
+
+The above plot shows the full distribution but can be noisy for small
+groups. So, I now want to summarise the data as mean conservation value
+per lifestyle, obtained directly from the phoscon output. I then
+visualise these means as narrow ridges (simulated by jittering 80 points
+around each mean with a small standard deviation) to allow side-by-side
+comparison of S32 and S34.
+
+```{r mean_conserv}
+all_lifestyles <- names(lifestyle_cols)
+
+# Got this info from the phoscon results
+tab <- tribble(
+  ~Lifestyle,      ~S32,        ~S34,
+  "Necrotroph",    88.8888889,  88.8888889,
+  "Saprophyte",    22.2222222,  22.2222222,
+  "Hemibiotroph",  92.8571429,  78.5714286,
+  "Biotroph",      28.5714286,  42.8571429
+)
+
+tab_long <- tab %>%
+  pivot_longer(cols = c(S32, S34),
+               names_to = "phos_site_id",
+               values_to = "prop_conserved")
+
+# Add 0 for missing lifestyles
+padding_means <- expand.grid(
+  Lifestyle    = all_lifestyles,
+  phos_site_id = unique(tab_long$phos_site_id),
+  stringsAsFactors = FALSE
+) %>%
+  anti_join(tab_long, by = c("Lifestyle", "phos_site_id")) %>%
+  mutate(prop_conserved = 0)
+
+means_df <- bind_rows(tab_long, padding_means)
+
+# Thicken each mean into many points around that value
+set.seed(148)
+plot_df <- means_df %>%
+  group_by(Lifestyle, phos_site_id) %>%
+  tidyr::uncount(weights = 80) %>%              # 80 pseudo‑points per mean
+  mutate(
+    prop_conserved = rnorm(
+      n(),
+      mean = prop_conserved,
+      sd   = 1                                  # small spread around mean
+    )
+  ) %>%
+  ungroup() %>%
+  mutate(
+    Lifestyle = factor(Lifestyle, levels = rev(all_lifestyles))
+  )
+
+ggplot(plot_df, aes(x = prop_conserved, y = Lifestyle, fill = Lifestyle)) +
+  geom_density_ridges(
+    alpha = 0.8,
+    scale = 1.2,
+    rel_min_height = 0,
+    bandwidth = 3
+  ) +
+  scale_fill_manual(values = lifestyle_cols, drop = FALSE) +
+  scale_x_continuous(breaks = c(0, 25, 50, 75, 100), limits = c(-2, 102)) +
+  facet_wrap(~ phos_site_id, ncol = 2) +
+  labs(x = "% of species with conserved phosphosite", y = NULL) +
+  theme_bw(base_size = 16) +
+  theme(
+    legend.position  = "none",
+    strip.background = element_rect(fill = "white", color = NA),
+    strip.text       = element_text(face = "bold"),
+    panel.spacing    = unit(1, "lines"),
+    axis.text        = element_text(size = 14, color = "black")
+  )
+```
+
+#### How to read this plot: 
+
+In the above plot, each ridge is very narrow and centered on a single
+value which ranges between 0 to 100, thois is the mean % of species in
+that lifestyle that have the phosphosite conserved.
+
+Eg. Here we can see that S32 is more highly conserved than S34 in
+hemibiotrophs, while both sites show more or less similar conservation
+in necrotrophs ). This may suggest S32 has a broader role across fungal
+pathogens, while S34 conservation is more lifestyle-specific. Based on
+Camilla's experiments, S32 was indeed important for pathogenicity, more
+so than S34 in Bip1.
+
+### Session Information
+
+```{r}
+sessionInfo()
+```
