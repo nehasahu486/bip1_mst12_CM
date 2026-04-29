@@ -1,7 +1,7 @@
 RNASeq analysis for Guy11 and Dbip1 and Dmst12
 ================
 Neha Sahu
-24 April,2026
+28 April,2026
 
 - [Description](#description)
   - [GoHREP](#gohrep)
@@ -44,12 +44,12 @@ strains (Dbip1,Dmst12) compared to wild-type Guy11 across multiple
 timepoints to understand processes regulated by these genes during
 fungal development and potential infection processes.
 
-**Hypothesis:**  
+**Hypothesis:**\
 *Camilla* has a hypothesis that bip1 and mst12 are co-regulated. By
 checking the gene regulation in deletion mutants of bip1 and mst12 at
 different timepoints,we can see if that’s the case or not.
 
-**Rationale:**  
+**Rationale:**\
 Understanding how key regulatory genes influence global gene expression
 patterns can reveal their functional roles and regulatory networks. By
 comparing transcriptional profiles of wild-type and mutant strains
