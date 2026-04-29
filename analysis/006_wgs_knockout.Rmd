@@ -1,0 +1,102 @@
+---
+title: "WGS Knockout Confirmation of bip1 Gene Deletions"
+author: "Neha Sahu"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: yeti
+    highlight: pygments
+    code_folding: show
+  github_document:
+    toc: true
+    toc_depth: 3
+    dev: "png"
+    html_preview: false
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+library(here)
+source(here("scripts","analysis_config.R"))
+init_analysis("006_wgs_knockout")
+
+knitr::opts_chunk$set(
+  fig.path="../data/results/006_wgs_knockout/00_figures/"
+)
+```
+
+# Load required libraries
+
+```{r lib, include=FALSE}
+library(tidyverse)
+```
+
+# Description
+
+Scripts for validation of gene deletions for **bip1** gene in
+*Magnaporthe oryzae* from whole genome sequencing (WGS) data with
+SAMtools flag filtering. The goal here to have different filtered bam
+files to distinguish between complete gene deletions or partial
+deletions or mapping artifacts. TL;DR - this is to processes raw
+paired-end FASTQ files through multiple filtered BAM files using
+SAMtools flag filtering.
+
+## Prerequisites
+
+-   **Access to HPC** - Norwich Biosciences Institute/The Sainsbury
+    Laboratory HPC system or any other
+-   **Raw WGS sequencing data** (paired-end FASTQ files) - from
+    sequencing provider (e.g., Novogene)
+-   ***Magnaporthe oryzae*** **reference genome** (MGGv8_genome.fasta)
+    from [Ensembl
+    fungi](https://fungi.ensembl.org/Magnaporthe_oryzae/Info/Index)
+-   ***Magnaporthe oryzae*** **GTF/GFF3 annotation file** - from
+    [Ensembl fungi](https://fungi.ensembl.org/info/data/ftp/index.html)
+-   **IGV software** installed locally
+
+## Data upload
+
+Raw sequencing results (fastq files) were uploaded to
+<https://sequences.tsl.ac.uk/> by Cami. There were two transformants for
+this project:
+
+1.  /tsl/data/reads//ntalbot/wgs_bip1_ko_mgg_08118_guy11/wgs_bip1_ko_mgg_08118_guy11/\_bip1_ko_t24_guy11/
+    \# transformant_24
+2.  /tsl/data/reads//ntalbot/wgs_bip1_ko_mgg_08118_guy11/wgs_bip1_ko_mgg_08118_guy11/bip1_ko_t13_guy11/
+    \# transformant_13
+
+## FASTQ to Multiple BAM Conversion
+
+Ran the script provided at
+`scripts/006_wgs_knockout/004_fastq_to_bam_filtered.sh`
+
+### SAM Flag Reference
+
+SAM flags are bit-wise flags that encode information about each read.
+More details can be found at
+<https://samtools.github.io/hts-specs/SAMv1.pdf> (Page 7).
+
+Here are the key flags used in this pipeline:
+
+| Flag  | Hex  | Description   | Meaning                                      |
+|-------|------|---------------|----------------------------------------------|
+| 0x1   | 1    | PAIRED        | Read is paired                               |
+| 0x2   | 2    | PROPER_PAIR   | Read mapped in proper pair (both read files) |
+| 0x100 | 256  | SECONDARY     | Secondary alignment                          |
+| 0x800 | 2048 | SUPPLEMENTARY | Supplementary alignment                      |
+
+From these outputs, I checked the region for bip1 gene - MGG_08118 in `proper_paired`
+files on IGV - also checked the secondary alignments - these had no reads
+on the bip1 region. Also used a bam file from the RNA seq sample (Dbip1 replicate number 2 at 24h)
+
+![](../data/results/006_wgs_knockout/00_figures/MGG_08118_wgs.png)
+
+
+
+```{r session-info}
+sessionInfo()
+```
