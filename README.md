@@ -16,9 +16,10 @@ This repository contains the analyses, scripts and files used for _M. oryzae_ Bi
 
 ### Data Structure
 
-- `analysis/` - Detailed Markdown files
-- `data/processed/` - Processed and intermediate files from analysis on the HPC or other sources
-- `data/results/` - Analysis results, plots, and summary tables
+- `analysis/` - Detailed analytical workflows and documentation
+- `data/processed/` - Processed and intermediate files from analysis on the HPC
+- `data/raw/` - Raw files from published data, or from other projects
+- `data/results/` - Analysis results, plots, and summary tables (these are outputs from the `analysis/` directory)
 - `scripts/` - Scripts and/or workflows used
 - `bin/` - Miscellaneous stuff
 
