@@ -3,17 +3,17 @@ title: "WGS Knockout Confirmation of bip1 Gene Deletions"
 author: "Neha Sahu"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
+  github_document:
+    toc: true
+    toc_depth: 3
+    dev: "png"
+    html_preview: false
   html_document:
     toc: true
     toc_float: true
     theme: yeti
     highlight: pygments
     code_folding: show
-  github_document:
-    toc: true
-    toc_depth: 3
-    dev: "png"
-    html_preview: false
 editor_options: 
   markdown: 
     wrap: 72

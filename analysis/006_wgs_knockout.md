@@ -46,7 +46,6 @@ this project:
     \# transformant_24
 2.  /tsl/data/reads//ntalbot/wgs_bip1_ko_mgg_08118_guy11/wgs_bip1_ko_mgg_08118_guy11/bip1_ko_t13_guy11/
     \# transformant_13
-3.  
 
 ## FASTQ to Multiple BAM Conversion
 
